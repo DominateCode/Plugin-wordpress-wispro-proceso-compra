@@ -1,4 +1,5 @@
 <?php
+/** Archivo principal del plugin, Contiene una cabecera estándar con los datos mínimos que WordPress necesita para realizar la instalación del plugin. Además, se definen las constantes y se realizan acciones iniciales.  */
 /**
  * @package wispro_integration
  * @version 0.0.1
@@ -13,7 +14,7 @@ Author URI: http://DominateCode-co.com/
 Licence: 
 */
 defined('ABSPATH') or die("Bye bye");
-define('PATH_WISPINTEG',plugin_dir_path(__FILE__).'wisprointegration/');
+define('PATH_WISPINTEG',plugin_dir_path(__FILE__));
 
 include(PATH_WISPINTEG.'/includes/opciones.php');
 include(PATH_WISPINTEG.'/includes/actions.php');
