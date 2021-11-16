@@ -29,7 +29,24 @@
   </div>
 </div>
 <!-- Pills content -->
-
-
+<script>
+jQuery(document).ready(function($) {
+    $('#ex1-tab-1').click(function () {
+      $('#ex1-pills-1').addClass('active show');
+      $('#ex1-pills-2').removeClass('active show');
+      $('#ex1-pills-3').removeClass('active show');
+    });
+    $('#ex1-tab-2').click(function () {
+      $('#ex1-pills-2').addClass('active show');
+      $('#ex1-pills-1').removeClass('active show');
+      $('#ex1-pills-3').removeClass('active show');
+    });
+    $('#ex1-tab-3').click(function () {
+      $('#ex1-pills-3').addClass('active show');
+      $('#ex1-pills-1').removeClass('active show');
+      $('#ex1-pills-2').removeClass('active show');
+    });
+  });
+</script>
 
 </div>
