@@ -11,6 +11,8 @@ if (! current_user_can ('manage_options')) wp_die (__ ('No tienes suficientes pe
 $wispro_api = new wisproIntegrationRestApi();
 $planes = $wispro_api->getPlans();
 
+//imprimir por consola
+echo '<script type="text/javascript">console.log('.json_encode($planes).');</script>';
 //form crear cliente
 echo '<form action="'.admin_url('admin-post.php').'" method="post">';
 echo '<input type="hidden" name="action" value="wisprointegration_create_client">';
