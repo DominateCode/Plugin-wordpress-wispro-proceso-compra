@@ -1,14 +1,13 @@
-<div class="wrap color-secundario-bg p-5">
+<div class="wrap color-secundario-bg p-2">
   <h2 class="has-text-align-center text-white mx-3">Compra tu Plan en 4 pasos</h2>
   <!-- Pills navs -->
-  <ul class="nav nav-pills justify-content-center text-center my-3 mx-auto" id="ex1" role="tablist">
+  <ul class="nav nav-pills justify-content-center text-center py-3 mb-3 mx-auto" id="ex1" role="tablist">
     <li class="nav-item" role="presentation">
-      <a class="nav-link link-white " id="ex1-tab-1" data-mdb-toggle="pill" href="#ex1-pills-1" role="tab"
+      <a class="nav-link link-white" aria-current="page" id="ex1-tab-1" data-mdb-toggle="pill" href="#ex1-pills-1" role="tab"
         aria-controls="ex1-pills-1" aria-selected="true">
         <div class="rounded-circle mx-auto circulo-contenedor-border-left">
-          <div class="bg-light color-terciario rounded-circle mx-auto circulo-contenedor">1</div>
-        </div>        
-        <br>
+          <div class="color-terciario rounded-circle mx-auto circulo-contenedor fs-3">1</div>
+        </div>  
         <span class="BwSurcoDemo-Regular">Elige tu plan</span>
       </a>
     </li>
@@ -16,19 +15,17 @@
       <a class="nav-link link-white" id="ex1-tab-2" data-mdb-toggle="pill" href="#ex1-pills-2" role="tab"
         aria-controls="ex1-pills-2" aria-selected="false">
         <div class="rounded-circle mx-auto circulo-contenedor-border-left">
-          <div class="bg-light color-terciario rounded-circle mx-auto circulo-contenedor">2</div>
+          <div class="color-terciario rounded-circle mx-auto circulo-contenedor  fs-3">2</div>
         </div>
-        <br>
         <span class="BwSurcoDemo-Regular">Datos de compra </span>
       </a>
     </li>
-    <li class="nav-ite" role="presentation">
+    <li class="nav-item" role="presentation">
       <a class="nav-link link-white" id="ex1-tab-3" data-mdb-toggle="pill" href="#ex1-pills-3" role="tab"
         aria-controls="ex1-pills-3" aria-selected="false"> 
         <div class="rounded-circle mx-auto circulo-contenedor-border-left">
-          <div class="bg-light color-terciario rounded-circle mx-auto circulo-contenedor">3</div>
-        </div> 
-        <br>
+          <div class="color-terciario rounded-circle mx-auto circulo-contenedor  fs-3">3</div>
+        </div>
         <span class="BwSurcoDemo-Regular">Finalizar compra</span>
       </a>
     </li>
@@ -37,7 +34,7 @@
 
   <!-- Pills content -->
   <div class="tab-content" id="ex1-content">
-    <div class="tab-pane fade show active" id="ex1-pills-1" role="tabpanel" aria-labelledby="ex1-tab-1"> 
+    <div class="tab-pane fade" id="ex1-pills-1" role="tabpanel" aria-labelledby="ex1-tab-1"> 
       <p class="has-text-align-center text-black mx-3 fs-2 montserrat-extrabold ">Planes para todos</p>
       <p class="has-text-align-center fs-5 BwSurcoDemo-Regular text-black mx-3">Elige el plan se ajuste a tus necesidades</p>
       <p class="has-text-align-center fs-5 BwSurcoDemo-Regular text-light mx:sm-3">Al contratar el servicio de Internet, podrás navegar en Youtube, Correo electrónico, Redes sociales, Netflix, descargas y mucho más.</p>
@@ -168,7 +165,6 @@
           </div>
         </div>
       </div>
-
       <p>
         <a class="btn color-primario-bg rounded-pill text-white" class="text-white" href="javascript:collapse_sorteo();">
           A tener en cuenta:
@@ -183,8 +179,148 @@
         </ul>
       </div>
     </div>
-    <div class="tab-pane fade" id="ex1-pills-2" role="tabpanel" aria-labelledby="ex1-tab-2">
-      Tab 2 content
+    <div class="tab-pane fade show active container-fluid" id="ex1-pills-2" role="tabpanel" aria-labelledby="ex1-tab-2">
+      <p class="has-text-align-center color-terciario mx-3 fs-2 montserrat-extrabold">Detalles de la compra</p>
+      <div class="w-75 mx-md-auto">
+        <table class="table table-bordered my-3 mx-auto text-center br-2 mb-3 fs-3">
+          <tbody class="bg-light color-text BwSurcoDemo-Regular">
+              <tr>
+                <td  class="align-middle"><p id="text-paquete">Servicio de conexión a internet 20 megas</p></td>
+                <td  class="align-middle">$<p id="value-paquete">80.000</p></td>
+              </tr>
+              <tr>
+                <td class="align-middle">Instalación</td>
+                <td  class="align-middle">$<p id="value-instalacion">100.000</p></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td class="align-middle montserrat-extrabold">Total: $<p id="value-instalacion">180.000</p></td>
+              </tr>
+          </tbody>
+        </table>
+        <form action="" id="frm-compra">
+          <div class="br-2 bg-light mt-5">
+            <!-- formulario de datos del cliente -->
+            <input type="hidden" name="action" value="wisprointegration_create_client">  
+            <input class="form-control" type="text" name="name" placeholder="Nombre Completo">  
+            <div class="row">
+              <div class="col-md-6">
+                <select class="form-control" name="identification_type">
+                  <option value="">Tipo de documento</option>
+                  <option value="CC">Cédula de Ciudadanía</option>
+                  <option value="TI">Tarjeta de Identidad</option>
+                  <option value="CE">Cédula de Extranjería</option>
+                  <option value="PAS">Pasaporte</option>
+                </select>
+              </div>  
+              <div class="col-md-6">
+                <input class="form-control" type="number" name="identification" placeholder="Identificación">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <input class="form-control" type="email" name="email" placeholder="Email">  
+              </div>
+              <div class="col-md-6">
+                <input class="form-control" type="phone" name="phone" placeholder="Numero de celular">  
+              </div>
+            </div>
+            <input class="form-control" type="text" name="address" placeholder="Dirección">  
+            <select class="form-control" id="ciudad" name="city">
+              <option value="">Seleccione una cuidad</option>
+              <option value="Miranda">Miranda</option>
+              <option value="Padilla">Padilla</option>
+              <option value="Florida">Florida</option>
+            </select>            
+            <input class="form-control" type="text" name="city" placeholder="Municipio">
+          </div>
+          <div class="br-2 bg-light mt-5 BwSurcoDemo-Regular">
+            <!-- formulario de pago -->
+            <p class="has-text-align-center pt-3 mx-3 fs-3 mb-3">Detalles de la compra</p>
+            <!-- radio group payments -->
+            <div class="row px-5 py-4">
+              <div class="col">
+                <div class="custom-control custom-radio">
+                  <input type="radio" id="customRadio1" name="payment_method" class="custom-control-input" value="1" checked>
+                  <label class="custom-control-label" for="customRadio1">PSE</label>
+                </div>
+              </div>
+              <div class="col">
+                <div class="custom-control custom-radio">
+                  <input type="radio" id="customRadio2" name="payment_method" class="custom-control-input" value="2">
+                  <label class="custom-control-label" for="customRadio2">Efecty</label>
+                </div>
+              </div>
+              <div class="col">
+                <div class="custom-control custom-radio">
+                  <input type="radio" id="customRadio3" name="payment_method" class="custom-control-input" value="2">
+                  <label class="custom-control-label" for="customRadio2">Baloto</label>
+                </div>
+              </div>
+              <div class="col">
+                <div class="custom-control custom-radio">
+                  <input type="radio" id="customRadio4" name="payment_method" class="custom-control-input" value="2">
+                  <label class="custom-control-label" for="customRadio2">En oficina</label>
+                </div>
+              </div>
+              <div class="col">
+                <div class="custom-control custom-radio">
+                  <input type="radio" id="customRadio5" name="payment_method" class="custom-control-input" value="2">
+                  <label class="custom-control-label" for="customRadio2">Transferencia</label>
+                </div>
+              </div>
+              <div class="col">
+                <div class="custom-control custom-radio">
+                  <input type="radio" id="customRadio5" name="payment_method" class="custom-control-input" value="2">
+                  <label class="custom-control-label" for="customRadio2">Tarjeta</label>
+                </div>
+              </div>
+            </div>
+            <!-- datos pago con tarjeta debito, credito -->
+            <div class="px-5 pb-5">
+              <div class="row">
+                <div class="py-2">
+                  <label for="card_name">Nombre en la tarjeta</label>
+                  <input class="form-control" type="text" name="card_name" placeholder="Nombre en la tarjeta">
+                </div>
+                <div class="py-2">
+                  <label for="card_number">Número de la tarjeta</label>
+                  <input class="form-control" type="number" name="card_number" placeholder="Número de la tarjeta">
+                </div>
+                <div class="py-2">
+                  <label for="card_expiration_date">Fecha de vencimiento</label>
+                  <input class="form-control" type="date" name="card_expiration_date" placeholder="Fecha de vencimiento">
+                </div>
+                <div class="py-2">
+                  <label for="card_cvv">CVV</label>
+                  <input class="form-control" type="number" name="card_cvv" placeholder="CVV">
+                </div>
+              </div>
+              <!-- remember card -->
+              <div class="row">
+                <div class="col">
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="customCheck1">
+                    <label class="custom-control-label" for="customCheck1">Recordar tarjeta</label>
+                  </div>
+                </div>
+              </div>
+              <!-- automatic payment -->
+              <div class="row">
+                <div class="col">
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="customCheck2">
+                    <label class="custom-control-label" for="customCheck2">Pago automático</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-5">
+            <button class="btn btn-block color-terciario-bg br-2" type="submit">Finalizar Compra</button>
+          </div>
+        </form>
+      </div>
     </div>
     <div class="tab-pane fade" id="ex1-pills-3" role="tabpanel" aria-labelledby="ex1-tab-3">
       Tab 3 content
