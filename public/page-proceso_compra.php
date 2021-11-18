@@ -1,5 +1,5 @@
-<div class="wrap color-secundario-bg p-2">
-  <h2 class="has-text-align-center text-white mx-3">Compra tu Plan en 4 pasos</h2>
+<div class="wrap color-secundario-bg px-2 pb-2 pt-5">
+  <h2 class="has-text-align-center text-white mx-3">Compra tu Plan en 3 pasos</h2>
   <!-- Pills navs -->
   <ul class="nav nav-pills justify-content-center text-center py-3 mb-3 mx-auto" id="ex1" role="tablist">
     <li class="nav-item" role="presentation">
@@ -34,7 +34,7 @@
 
   <!-- Pills content -->
   <div class="tab-content" id="ex1-content">
-    <div class="tab-pane fade" id="ex1-pills-1" role="tabpanel" aria-labelledby="ex1-tab-1"> 
+    <div class="tab-pane fade show active" id="ex1-pills-1" role="tabpanel" aria-labelledby="ex1-tab-1"> 
       <p class="has-text-align-center text-black mx-3 fs-2 montserrat-extrabold ">Planes para todos</p>
       <p class="has-text-align-center fs-5 BwSurcoDemo-Regular text-black mx-3">Elige el plan se ajuste a tus necesidades</p>
       <p class="has-text-align-center fs-5 BwSurcoDemo-Regular text-light mx:sm-3">Al contratar el servicio de Internet, podrás navegar en Youtube, Correo electrónico, Redes sociales, Netflix, descargas y mucho más.</p>
@@ -179,22 +179,22 @@
         </ul>
       </div>
     </div>
-    <div class="tab-pane fade show active container-fluid" id="ex1-pills-2" role="tabpanel" aria-labelledby="ex1-tab-2">
+    <div class="tab-pane fade container-fluid" id="ex1-pills-2" role="tabpanel" aria-labelledby="ex1-tab-2">
       <p class="has-text-align-center color-terciario mx-3 fs-2 montserrat-extrabold">Detalles de la compra</p>
-      <div class="w-75 mx-md-auto">
-        <table class="table table-bordered my-3 mx-auto text-center br-2 mb-3 fs-3">
+      <div class="w-75 mx-auto">
+        <table class="table table-bordered my-3 text-center br-2 mb-3 fs-3">
           <tbody class="bg-light color-text BwSurcoDemo-Regular">
               <tr>
                 <td  class="align-middle"><p id="text-paquete">Servicio de conexión a internet 20 megas</p></td>
-                <td  class="align-middle">$<p id="value-paquete">80.000</p></td>
+                <td  class="align-middle">$<p class="d-inline" id="value-paquete">80.000</p></td>
               </tr>
               <tr>
                 <td class="align-middle">Instalación</td>
-                <td  class="align-middle">$<p id="value-instalacion">100.000</p></td>
+                <td  class="align-middle">$<p class="d-inline" id="value-instalacion">100.000</p></td>
               </tr>
               <tr>
                 <td></td>
-                <td class="align-middle montserrat-extrabold">Total: $<p id="value-instalacion">180.000</p></td>
+                <td class="align-middle montserrat-extrabold">Total: $<p id="value-instalacion d-inline">180.000</p></td>
               </tr>
           </tbody>
         </table>
@@ -238,7 +238,7 @@
             <!-- formulario de pago -->
             <p class="has-text-align-center pt-3 mx-3 fs-3 mb-3">Detalles de la compra</p>
             <!-- radio group payments -->
-            <div class="row px-5 py-4">
+            <div class="row px-4 px-md-5 py-4">
               <div class="col">
                 <div class="custom-control custom-radio">
                   <input type="radio" id="customRadio1" name="payment_method" class="custom-control-input" value="1" checked>
@@ -277,7 +277,7 @@
               </div>
             </div>
             <!-- datos pago con tarjeta debito, credito -->
-            <div class="px-5 pb-5">
+            <div class="px-4 px-md-5 pb-5">
               <div class="row">
                 <div class="py-2">
                   <label for="card_name">Nombre en la tarjeta</label>
@@ -316,14 +316,25 @@
               </div>
             </div>
           </div>
-          <div class="mt-5">
-            <button class="btn btn-block color-terciario-bg br-2" type="submit">Finalizar Compra</button>
+          <div class="my-5 has-text-align-center">
+            <button class="btn btn-block color-terciario-bg br-2 p-3" type="submit">Finalizar Compra</button>
           </div>
         </form>
       </div>
+      <div class="row pb-4 px-2 fs-5">
+        <div class="col-3 d-inline text-white BwSurcoDemo-Regular ">¿Necesitas ayuda? <br> Siempre estamos para tí</div>
+        <div class="col align-middle d-inline">
+          <button class="btn btn-block color-terciario-bg br-2 p-3" type="submit">Chatear con un asesor en vivo</button>
+        </div>
+      </div>
     </div>
-    <div class="tab-pane fade" id="ex1-pills-3" role="tabpanel" aria-labelledby="ex1-tab-3">
-      Tab 3 content
+    <div class="tab-pane fade container-fluid" id="ex1-pills-3" role="tabpanel" aria-labelledby="ex1-tab-3">
+      <div class="text-center text-white my-5 py-5">
+        <h2 class="has-text-align-center text-white mx-3">¡Gracias por tu compra!</h2>
+        <p class="fs-3 BwSurcoDemo-Regular">Uno de nuestros asesores se comunicara contigo en la mayor brevedad</p>
+        <p class="fs-3 BwSurcoDemo-Regular">Gracias por preferirnos</p>
+      </div>
+      <p class="fs-4 BwSurcoDemo-Regular">*Recuerda inscribirte para ganarpremios al pagar tu factura</p>
     </div>
   </div>
   <!-- Pills content -->
@@ -358,4 +369,80 @@
       x.style.display = "none";
     }
   }
+</script>
+<script>
+//funcion seleccion de paquete
+  function seleccionar_paquete(paquete) {
+    var paquete_seleccionado = document.getElementById("paquete_seleccionado");
+    paquete_seleccionado.value = paquete;
+
+    $('#ex1-tab-2').click(function () {
+      $('#ex1-pills-2').addClass('active show');
+      $('#ex1-pills-1').removeClass('active show');
+      $('#ex1-pills-3').removeClass('active show');
+    });
+  }
+
+//funcion realizar compra
+  function realizar_compra() {
+    var paquete_seleccionado = document.getElementById("paquete_seleccionado");
+    var paquete = paquete_seleccionado.value;
+    var nombre = document.getElementById("nombre").value;
+    var apellido = document.getElementById("apellido").value;
+    var email = document.getElementById("email").value;
+    var telefono = document.getElementById("telefono").value;
+    var direccion = document.getElementById("direccion").value;
+    var ciudad = document.getElementById("ciudad").value;
+    var estado = document.getElementById("estado").value;
+    var codigo_postal = document.getElementById("codigo_postal").value;
+    var pais = document.getElementById("pais").value;
+    var metodo_pago = document.getElementById("metodo_pago").value;
+    var card_name = document.getElementById("card_name").value;
+    var card_number = document.getElementById("card_number").value;
+    var card_expiration_date = document.getElementById("card_expiration_date").value;
+    var card_cvv = document.getElementById("card_cvv").value;
+    var remember_card = document.getElementById("remember_card").value;
+    var automatic_payment = document.getElementById("automatic_payment").value;
+
+    if (paquete == "") {
+      alert("Selecciona un paquete");
+    } else if (nombre == "") {
+      alert("Ingresa tu nombre");
+    } else if (apellido == "") {
+      alert("Ingresa tu apellido");
+    } else if (email == "") {
+      alert("Ingresa tu email");
+    } else if (telefono == "") {
+      alert("Ingresa tu telefono");
+    } else if (direccion == "") {
+      alert("Ingresa tu direccion");
+    } else if (ciudad == "") {
+      alert("Ingresa tu ciudad");
+    } else if (estado == "") {
+      alert("Ingresa tu estado");
+    } else if (codigo_postal == "") {
+      alert("Ingresa tu codigo postal");
+    } else if (pais == "") {
+      alert("Ingresa tu pais");
+    } else if (metodo_pago == "") {
+      alert("Selecciona un metodo de pago");
+    } else if (card_name == "") {
+      alert("Ingresa el nombre de la tarjeta");
+    } else if (card_number == "") {
+      alert("Ingresa el numero de la tarjeta");
+    } else if (card_expiration_date == "") {
+      alert("Ingresa la fecha de expiracion de la tarjeta");
+    } else if (card_cvv == "") {
+      alert("Ingresa el cvv de la tarjeta");
+    } else if (remember_card == "") {
+      alert("Selecciona si quieres recordar tu tarjeta");
+    } else if (automatic_payment == "") {
+      alert("Selecciona si quieres pagar tu factura automaticamente");
+    } else {
+      $('#ex1-tab-3').click(function () {
+        $('#ex1-pills-3').addClass('active show');
+        $('#ex1-pills-1').removeClass('active show');
+        $('#ex1-pills-2').removeClass('active show');
+      });
+    }
 </script>
