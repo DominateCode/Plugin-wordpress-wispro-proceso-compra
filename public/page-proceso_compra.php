@@ -34,7 +34,7 @@
 
   <!-- Pills content -->
   <div class="tab-content" id="ex1-content">
-    <div class="tab-pane fade show active" id="ex1-pills-1" role="tabpanel" aria-labelledby="ex1-tab-1"> 
+    <div class="tab-pane fade show active container-fluid" id="ex1-pills-1" role="tabpanel" aria-labelledby="ex1-tab-1"> 
       <p class="has-text-align-center text-black mx-3 fs-2 montserrat-extrabold ">Planes para todos</p>
       <p class="has-text-align-center fs-5 BwSurcoDemo-Regular text-black mx-3">Elige el plan se ajuste a tus necesidades</p>
       <p class="has-text-align-center fs-5 BwSurcoDemo-Regular text-light mx:sm-3">Al contratar el servicio de Internet, podrás navegar en Youtube, Correo electrónico, Redes sociales, Netflix, descargas y mucho más.</p>
@@ -339,6 +339,7 @@
   </div>
   <!-- Pills content -->
 </div>
+<!-- seleccionar un paquete -->
 
 <!-- scripts -->
 <script>
@@ -369,17 +370,16 @@
       x.style.display = "none";
     }
   }
-</script>
-<script>
-//funcion seleccion de paquete
+  //funcion seleccion de paquete
   function seleccionar_paquete(paquete) {
     var paquete_seleccionado = document.getElementById("paquete_seleccionado");
     paquete_seleccionado.value = paquete;
-
-    $('#ex1-tab-2').click(function () {
-      $('#ex1-pills-2').addClass('active show');
-      $('#ex1-pills-1').removeClass('active show');
-      $('#ex1-pills-3').removeClass('active show');
+    jQuery(document).ready(function ($) {
+      $('#ex1-tab-2').click(function () {
+        $('#ex1-pills-2').addClass('active show');
+        $('#ex1-pills-1').removeClass('active show');
+        $('#ex1-pills-3').removeClass('active show');
+      });
     });
   }
 
@@ -439,10 +439,12 @@
     } else if (automatic_payment == "") {
       alert("Selecciona si quieres pagar tu factura automaticamente");
     } else {
-      $('#ex1-tab-3').click(function () {
-        $('#ex1-pills-3').addClass('active show');
-        $('#ex1-pills-1').removeClass('active show');
-        $('#ex1-pills-2').removeClass('active show');
+      jQuery(document).ready(function ($) {
+        $('#ex1-tab-3').click(function () {
+          $('#ex1-pills-3').addClass('active show');
+          $('#ex1-pills-1').removeClass('active show');
+          $('#ex1-pills-2').removeClass('active show');
+        });
       });
     }
 </script>

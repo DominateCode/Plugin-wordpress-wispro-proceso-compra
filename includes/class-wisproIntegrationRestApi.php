@@ -7,17 +7,24 @@ class wisproIntegrationRestApi {
     private $api_secret = '';
     private $api_token = 'ee6e84ac-0279-45e5-a080-1db9f044ffab';
    
-   // public function __construct($api_key, $api_secret) {
+    //public function __construct($api_key, $api_secret) {
+    public function __construct() {
         //$this->api_key = $api_key;
         //$this->api_secret = $api_secret;
-        //$this->api_token = $this->getToken();
-    //}
+        $this->api_url = $this->get_api_url();
+        $this->api_token = $this->getToken();
+    }
+
+    public function get_api_url() {
+        $this->api_token = get_option('wisprointegration_api_url');
+        return $this->api_token;
+    }
 
     public function getToken() {
-        $this->api_token = get_option('wispro_api_token');
-        if(empty($this->api_token)) {
-            $this->api_token = $this->getNewToken();
-        }
+        $this->api_token = get_option('wisprointegration_api_token');
+        //if(empty($this->api_token)) {
+          //  $this->api_token = $this->getNewToken();
+        //}
         return $this->api_token;
     }
 

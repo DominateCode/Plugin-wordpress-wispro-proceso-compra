@@ -2,6 +2,7 @@
 
 /** Funciones relacionadas con el menu de administracion */
 
+
 function prefijo_menu_admin() {
     add_menu_page(
        'Wispro integration',
@@ -9,6 +10,23 @@ function prefijo_menu_admin() {
         'manage_options',
         PATH_WISPINTEG.'admin/general.php'
     );
+    
+    add_submenu_page(
+        PATH_WISPINTEG.'admin/general.php',
+        'Planes',
+        'Planes',
+        'manage_options',
+        PATH_WISPINTEG.'admin/planes.php'
+    );
+
+    add_submenu_page(
+        PATH_WISPINTEG.'admin/general.php',
+        'Pagos',
+        'Pagos',
+        'manage_options',
+        PATH_WISPINTEG.'admin/pagos.php'
+    );
+
     add_submenu_page(
         PATH_WISPINTEG.'admin/general.php',
         'Configuration',
@@ -16,6 +34,7 @@ function prefijo_menu_admin() {
         'manage_options',
         PATH_WISPINTEG.'admin/configuration.php'
     );
+    
 }
 add_action( 'admin_menu', 'prefijo_menu_admin' );
 
