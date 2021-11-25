@@ -15,8 +15,6 @@ class table_planes extends WP_List_Table {
      * @var array 
      **************************************************************************/
     public $data;
-    public $columns;
-
 
     /** ************************************************************************
      * REQUIRED. Set up a constructor that references the parent constructor. We 
@@ -58,28 +56,15 @@ class table_planes extends WP_List_Table {
      **************************************************************************/
     function column_default($item, $column_name){
         switch($column_name){
-            case 'booktitle':
             case 'descarga_kb':
             case 'subida_kb':
             case 'precio':
-            case 'nombre':
+            case 'title':
                 return $item->$column_name;
             default:
                 return print_r($item,true); //Show the whole array for troubleshooting purposes
         }
     }
-
-    function column_booktitle($item) {
-        $actions = array(
-                  'edit'      => sprintf('<a href="?page=%s&action=%s&book=%s">Editar</a>',$_REQUEST['page'],'edit',$item->id ),
-                  'delete'    => sprintf('<a href="?page=%s&action=%s&book=%s">Papelera</a>',$_REQUEST['page'],'delete',$item->id ),
-              );
-      
-        return sprintf('%1$s %2$s',
-                $item->booktitle,
-                $this->row_actions($actions) );
-      }
-
 
     /** ************************************************************************
      * Recommended. This is a custom column method and is responsible for what
@@ -101,16 +86,32 @@ class table_planes extends WP_List_Table {
         
         //Build row actions
         $actions = array(
-            'edit'      => sprintf('<a href="?page=%s&action=%s&movie=%s">Edit</a>',$_REQUEST['page'],'edit',$item->id),
-            'delete'    => sprintf('<a href="?page=%s&action=%s&movie=%s">Delete</a>',$_REQUEST['page'],'delete',$item->id),
+            'edit'      => sprintf('<a href="?page=%s&action=%s&plan=%s">Editar</a>',$_REQUEST['page'],'edit',$item->id),
+            'delete'    => sprintf('<a href="?page=%s&action=%s&plan=%s">Borrar</a>',$_REQUEST['page'],'delete',$item->id),
         );
         
+         //item post name from id
+        $post_name = ($item->id !== 0 ) ? get_post_field( 'post_name', $item->id ) : 'non post';
         //Return the title contents
-        return sprintf('%1$s <span style="color:silver">(id:%2$s)</span>%3$s',
+        return sprintf('%1$s <span style="color:silver">(Post:%2$s)</span>%3$s',
             /*$1%s*/ $item->nombre,
-            /*$2%s*/ $item->id,
+            /*$2%s*/ $post_name,
             /*$3%s*/ $this->row_actions($actions)
         );
+    }
+
+    function column_descarga_kb($item){
+        if($item->descarga_kb >= 1000){
+            return $item->descarga_kb/1000 . ' MB';
+        }
+        return $item->descarga_kb . ' KB';
+    }
+
+    function column_subida_kb($item){
+        if($item->subida_kb >= 1000){
+            return $item->subida_kb/1000 . ' MB';
+        }
+        return $item->subida_kb . ' KB';
     }
 
 
@@ -148,7 +149,7 @@ class table_planes extends WP_List_Table {
     function get_columns(){
         $columns = array(
             'cb'       => '<input type="checkbox" />', //Render a checkbox instead of text
-            'nombre'   => 'Nombre',
+            'title'   => 'Nombre',
             'precio'   => 'Precio',
             'subida_kb'   => 'Subida',
             'descarga_kb' => 'Descarga',
@@ -173,7 +174,7 @@ class table_planes extends WP_List_Table {
      **************************************************************************/
     function get_sortable_columns() {
         $sortable_columns = array(
-            'nombre'     => array('nombre',false),     //true means it's already sorted
+            'title'     => array('nombre',false),     //true means it's already sorted
             'precio'    => array('precio',false),
             'subida_kb'  => array('subida_kb',false),
             'descarga_kb'  => array('descarga_kb',false),
@@ -196,12 +197,12 @@ class table_planes extends WP_List_Table {
      * 
      * @return array An associative array containing all the bulk actions: 'slugs'=>'Visible Titles'
      **************************************************************************/
-    function get_bulk_actions() {
+    /*function get_bulk_actions() {
         $actions = array(
             'delete'    => 'Delete',
         );
         return $actions;
-    }
+    }*/
 
 
     /** ************************************************************************
@@ -215,9 +216,139 @@ class table_planes extends WP_List_Table {
         
         //Detect when a bulk action is being triggered...
         if( 'delete'===$this->current_action() ) {
-            wp_die('Items deleted (or they would be if we had items to delete)!');
+            $this->delete_plan();
+        }
+
+        if( 'edit' === $this->current_action() ) {
+            $this->edit_plan();
         }
         
+    }
+
+    function delete_plan(){
+        global $wpdb; 
+
+        if(isset($_POST['delete'])){
+            $id = $_POST['id'];
+            $delete = $wpdb->delete($wpdb->prefix . 'wispro_integration_planes', array ('id' => $id));
+            if(false === $delete){
+                echo '<div class="wrap"><h2>No se pudo eliminar el plan</h2></div>';
+            }else{
+                echo '<script>window.location.href = "?page=wisprointegration%2Fadmin%2Fplanes.php";</script>';
+            }
+        }
+
+        $id = $_GET['plan'];
+
+        //form confirm delete plan
+        $confirm = '<div class="wrap">
+            <h3>¿Está seguro que desea eliminar el plan?</h3>
+            <form method="post" action="">
+                <input type="hidden" name="id" value="'.$id.'">
+                <input type="submit" name="delete" value="Eliminar" class="button-primary">
+                <a href="?page=wisprointegration%2Fadmin%2Fplanes.php" class="button-secondary">Cancelar</a>
+            </form>
+        </div>';
+        echo $confirm;
+
+        wp_die();
+    }
+
+    function edit_plan(){
+        global $wpdb; 
+
+        if(isset($_POST['submit'])){
+            $plan_name = $_POST['plan_name'];
+            $plan_price = $_POST['plan_price'];
+            $plan_subida = $_POST['plan_subida'];
+            $plan_descarga = $_POST['plan_descarga'];
+            $post_id = $_POST['post_id'];
+            $plan_id = $_POST['id'];
+            $dispositivos = $_POST['num_dispositivos'];
+            $estrato = $_POST['plan_estrato'];
+
+            $update = $wpdb->update($wpdb->prefix . 'wispro_integration_planes', array(
+                'nombre' => $plan_name,
+                'precio' => $plan_price,
+                'subida_kb' => $plan_subida,
+                'descarga_kb' => $plan_descarga,
+                'post_id' => $post_id,
+                'num_dispositivos' => $dispositivos,
+                'estrato' => $estrato
+            ), array( 'id' => $plan_id ));
+            if(false === $update){
+                echo '<script>alert("Error al actualizar el plan");</script>';
+            }else{
+                echo '<script>window.location.href = "?page=wisprointegration%2Fadmin%2Fplanes.php";</script>';
+            }
+        }
+            
+        //form edit plan
+        $id = $_GET['plan'];
+        $plan = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpdb->prefix" . "wispro_integration_planes WHERE id = %d", $id));
+        $plan_name = $plan->nombre;
+        $plan_price = $plan->precio;
+        $plan_subida = $plan->subida_kb;
+        $plan_descarga = $plan->descarga_kb;
+        $post_id = $plan->post_id;
+        $plan_id = $plan->id;
+        $estrato = $plan->estrato;
+        $dispositivos = $plan->num_dispositivos;
+        
+        $html = '<div class="wrap">';
+        $html .= '<h3>Editar plan</h3>';
+        $html .= '<form method="post" action="">';
+        $html .= '<input type="hidden" name="id" value="'.$plan_id.'">';
+        $html .= '<table class="form-table">';
+        $html .= '<tbody>';
+        $html .= '<tr>';
+        $html .= '<th scope="row"><label for="plan_name">Nombre</label></th>';
+        $html .= '<td><input name="plan_name" type="text" id="plan_name" value="'.$plan_name.'" class="regular-text"></td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<th scope="row"><label for="plan_price">Precio</label></th>';
+        $html .= '<td><input name="plan_price" type="text" id="plan_price" value="'.$plan_price.'" class="regular-text"></td>';
+        $html .= '</tr>';
+        //input campo estrato
+        $html .= '<tr>';
+        $html .= '<th scope="row"><label for="plan_estrato">Estrato</label></th>';
+        $html .= '<td><input name="plan_estrato" type="text" id="plan_estrato" value="'.$estrato.'" class="regular-text"></td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<th scope="row"><label for="plan_subida">Subida</label></th>';
+        $html .= '<td><input name="plan_subida" type="text" id="plan_subida" value="'.$plan_subida.'" class="regular-text"></td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<th scope="row"><label for="plan_descarga">Descarga</label></th>';
+        $html .= '<td><input name="plan_descarga" type="text" id="plan_descarga" value="'.$plan_descarga.'" class="regular-text"></td>';        
+        $html .= '</tr>';
+        // cantidad de dispositivos recomendados
+        $html .= '<tr>';
+        $html .= '<th scope="row"><label for="plan_descarga">Dispositivos recomendados</label></th>';
+        $html .= '<td><input name="num_dispositivos" type="text" id="num_dispositivos" value="'.$dispositivos.'" class="regular-text"></td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<th scope="row"><label for="post_id">Post</label></th>';
+        $html .= '<td><select name="post_id" id="post_id">';
+        $html .= '<option value="0">Seleccione un post</option>';
+        $posts = get_posts(array('post_type' => 'post', 'numberposts' => -1));
+        foreach($posts as $post){
+            $html .= '<option value="'.$post->ID.'" ';
+            if($post->ID == $post_id){
+                $html .= 'selected';
+            }
+            $html .= '>'.$post->post_title.'</option>';
+        }
+        $html .= '</select><a href="'.get_admin_url().'post-new.php?post_type=post" class="button-secondary">Crear nuevo post</a></td>';
+        $html .= '</tr>';
+        $html .= '</tbody>';
+        $html .= '</table>';
+        $html .= '<p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Guardar">';
+        $html .= '<a href="?page=wisprointegration%2Fadmin%2Fplanes.php" class="button button-secondary">Cancelar</a></p>';
+        $html .= '</form>';
+        $html .= '</div>';
+        echo $html;
+        wp_die();
     }
 
 
@@ -237,7 +368,7 @@ class table_planes extends WP_List_Table {
      * @uses $this->set_pagination_args()
      **************************************************************************/
     function prepare_items() {
-        global $wpdb; //This is used only if making any database queries
+       //This is used only if making any database queries
 
         /**
          * First, lets decide how many records per page to show
@@ -284,14 +415,7 @@ class table_planes extends WP_List_Table {
          */
         global $wpdb;
         $table_name = $wpdb->prefix.'wispro_integration_planes';
-        $planes = $wpdb->get_results("SELECT * FROM $table_name");
-
-        $data = $planes;
-        
-        //javascript print console
-        echo '<script>console.log('.json_encode($data).')</script>';
-
-                
+        $data = $wpdb->get_results("SELECT * FROM $table_name");
         
         /**
          * This checks for sorting input and sorts the data in our array accordingly.

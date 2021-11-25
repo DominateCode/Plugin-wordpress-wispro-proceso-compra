@@ -42,6 +42,7 @@ register_activation_hook(__FILE__, 'wispro_integration_activar');
 //función que se ejecuta cuando el plugin es desactivado
 function wispro_integration_desactivar(){
    //eliminar options del plugin.
+   delete_option('wisprointegration_costo_instalacion');
    delete_option('wisprointegration_api_token');
    delete_option('wisprointegration_api_url');
    
@@ -60,13 +61,14 @@ function wispro_integration_crear_tabla_planes(){
    global $wpdb;
    $tabla_planes = $wpdb->prefix . 'wispro_integration_planes';
    $sql = "CREATE TABLE IF NOT EXISTS $tabla_planes (
-      id INT(38) NOT NULL AUTO_INCREMENT,
+      id VARCHAR(38) NOT NULL AUTO_INCREMENT,
       nombre VARCHAR(255) NOT NULL,
-      estrato VARCHAR(255),
-      descripcion VARCHAR(255),
+      estrato varchar(),
+      post_id bigint(20),
       precio VARCHAR(255) NOT NULL,
       subida_kb int(3) NOT NULL,
       descarga_kb int(3) NOT NULL,
+      num_dispositivos int(3),
       PRIMARY KEY (id)
    )";
    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');

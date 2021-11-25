@@ -36,8 +36,8 @@ if (! current_user_can ('manage_options')) wp_die (__ ('No tienes suficientes pe
             <?php do_settings_sections( 'wispro_integration_settings' ); ?>
             <table class="form-table">
                <tr valign="top">
-                  <th scope="row">Llenar tabla planes desde wispro cloud</th>
-                  <td><input type="submit" name="wispro_integration_llenar_tabla_planes" value="Llenar tabla planes desde wispro cloud" /></td>
+                  <th scope="row">Importar planes desde wispro cloud</th>
+                  <td><input type="submit" name="wispro_integration_llenar_tabla_planes" value="Importar" /></td>
                </tr>
             </table>
          </form>
@@ -79,26 +79,28 @@ function wispro_cloud_importar_planes(){
    global $wpdb;
    $wispro = new WisproIntegrationRestApi();
    $planes = $wispro->getPlans();
-   echo '<script> console.log('.$planes.')</script>';
+   //echo '<script> console.log('.$planes.')</script>';
    foreach ($planes->data as $key) {
       //comprobar si existe el plan en la tabla sql
       $plan = $key->id;
-      $sql = "SELECT * FROM wispro_planes WHERE plan_id = '$plan'";
+      $sql = "SELECT * FROM ". $wpdb->prefix ."wispro_integration_planes WHERE id = '$plan'";
       $result = $wpdb->get_results($sql);
       //error al realizar la consulta
       if ($result === false) {
          return 'error';
       }
 
-      //si no existe el plan en la tabla sql
+      print_r(count($result));
+
       if(count($result) == 0){
-         //insertar plan
+         //si no existe el plan en la tabla mysql insertarlo
          $insert = $wpdb->insert(
             $wpdb->prefix . 'wispro_integration_planes', array(
                'id' => $key->id,
                'nombre' => $key->name,
                'estrato' => '',
-               'descripcion' => '',
+               'post_id' => '',
+               'num_dispositivos' => '',
                'precio' => $key->price,
                'subida_kb' => $key->ceil_down_kbps,
                'descarga_kb' => $key->ceil_up_kbps
@@ -109,14 +111,14 @@ function wispro_cloud_importar_planes(){
             return 'error';
          }
       } else {
-         //actualizar plan
-         $update = $wpdb->update('wispro_planes', array(
+         //si existe el plan en la tabla sql actualizarlo
+         $update = $wpdb->update( $wpdb->prefix . 'wispro_integration_planes', array(
             'nombre' => $key->name,
             'precio' => $key->price,
             'subida_kb' => $key->ceil_down_kbps,
             'descarga_kb' => $key->ceil_up_kbps
-         ), array('plan_id' => $key->id));
-         if( !$update ) {
+         ), array('id' => $key->id),array(),array());
+         if( false === $update ) {
             echo '<div class="error"><p>' . __('Error al actualizar plan.'). $key->name . $wpdb->last_error  . '</p></div>';
             return 'error';
          }
