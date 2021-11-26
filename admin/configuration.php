@@ -41,14 +41,12 @@ if (! current_user_can ('manage_options')) wp_die (__ ('No tienes suficientes pe
                </tr>
             </table>
          </form>
-        
          <?php
       }
       ?>
    </div>
 </div>
 <?php
-
 
 function actions(){
    //get actions 
@@ -89,8 +87,6 @@ function wispro_cloud_importar_planes(){
       if ($result === false) {
          return 'error';
       }
-
-      print_r(count($result));
 
       if(count($result) == 0){
          //si no existe el plan en la tabla mysql insertarlo

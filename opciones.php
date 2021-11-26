@@ -8,31 +8,31 @@ function prefijo_menu_admin() {
        'Wispro integration',
         'Wispro integration',
         'manage_options',
-        PATH_WISPINTEG.'admin/general.php'
+        WISPROINTEGRATION_PLUGIN_DIR.'admin/general.php'
     );
     
     add_submenu_page(
-        PATH_WISPINTEG.'admin/general.php',
+        WISPROINTEGRATION_PLUGIN_DIR.'admin/general.php',
         'Planes',
         'Planes',
         'manage_options',
-        PATH_WISPINTEG.'admin/planes.php'
+        WISPROINTEGRATION_PLUGIN_DIR.'admin/planes.php'
     );
 
     add_submenu_page(
-        PATH_WISPINTEG.'admin/general.php',
+        WISPROINTEGRATION_PLUGIN_DIR.'admin/general.php',
         'Pagos',
         'Pagos',
         'manage_options',
-        PATH_WISPINTEG.'admin/pagos.php'
+        WISPROINTEGRATION_PLUGIN_DIR.'admin/pagos.php'
     );
 
     add_submenu_page(
-        PATH_WISPINTEG.'admin/general.php',
+        WISPROINTEGRATION_PLUGIN_DIR.'admin/general.php',
         'Configuration',
         'Configuration',
         'manage_options',
-        PATH_WISPINTEG.'admin/configuration.php'
+        WISPROINTEGRATION_PLUGIN_DIR.'admin/configuration.php'
     );
     
 }
@@ -40,8 +40,24 @@ add_action( 'admin_menu', 'prefijo_menu_admin' );
 
 function shortcode_proceso_compra($atts) {
     ob_start();
-    include PATH_WISPINTEG.'public/page-proceso_compra.php';
+    include WISPROINTEGRATION_PLUGIN_DIR.'shortcodes/shortcode-proceso_compra.php';
     return ob_get_clean();
 }
 add_shortcode( 'wispro_proceso_compra', 'shortcode_proceso_compra' );
 
+function shortcode_planes($atts) {
+    ob_start();
+    include WISPROINTEGRATION_PLUGIN_DIR.'shortcodes/shortcode-planes.php';
+    return ob_get_clean();
+}
+add_shortcode( 'wisprointegration_planes', 'shortcode_planes' );
+
+
+//notices
+function wispro_integration_admin_notice__info() {
+    $class = 'notice notice-info';
+    $message = __( 'Recuerada que para utilizar este plugin debes tener instalado y activado el thema Elkinetco o uno similar.', 'Wispro_integraton' );
+ 
+    printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) ); 
+}
+add_action( 'admin_notices', 'wispro_integration_admin_notice__info' );

@@ -19,10 +19,27 @@ $wispro_class = new wisprointegration();
 			<?php settings_fields( 'wisprointegration_options' ); ?>
 			<?php do_settings_sections( 'wisprointegration_options' ); ?>
 			<table class="form-table">
+				<!-- option costo instalacion -->
 				<tr valign="top">
 					<th scope="row"><?php _e( 'Costo de instalación','Wispro_integraton' ) ?></th>
 					<td>
 						<input type="text" name="costo_instalacion" value="<?php echo esc_attr( get_option('wisprointegration_costo_instalacion') ); ?>" />
+					</td>
+				</tr>
+				<!-- option select pagina del proceso de compras -->
+				<tr valign="top">
+					<th scope="row"><?php _e( 'Página del proceso de compras','Wispro_integraton' ) ?></th>
+					<td>
+						<select name="page_compras">
+							<option value="0"><?php _e( 'Seleccione una página','Wispro_integraton' ) ?></option>
+							<?php 
+							$pages = get_pages();
+							foreach ( $pages as $page ) {
+								$selected = (get_option('wisprointegration_pagina_proceso_compras') == $page->ID) ? 'selected' : '';
+								echo '<option value="'.$page->ID.'" '.$selected.'>'.$page->post_title.'</option>';
+							}
+							?>
+						</select>
 					</td>
 				</tr>
 			</table>
@@ -42,5 +59,9 @@ function actions(){
 	if (isset($_POST['costo_instalacion'])) {
 		update_option ('wisprointegration_costo_instalacion', $_POST['costo_instalacion']);
 		echo '<div class="updated"><p>' . __('Costo de instalación actualizado.') . '</p></div>';
-	 }
+	}
+	if (isset($_POST['page_compras'])) {
+		update_option ('wisprointegration_pagina_proceso_compras', $_POST['page_compras']);
+		echo '<div class="updated"><p>' . __('Página del proceso de compras actualizada.') . '</p></div>';
+	}
 } 

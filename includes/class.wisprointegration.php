@@ -12,6 +12,15 @@ class wisprointegration {
         if(!get_option('wisprointegration_api_url')){
             return false;
         }
+        //comprobar option wisprointegration_pagina_proceso_compras
+        if(!get_option('wisprointegration_pagina_proceso_compras')){
+            return false;
+        }
+
+        //comrpobar option wisprointegration_whatsapp_number
+        if(!get_option('wisprointegration_whatsapp_number')){
+            return false;
+        }
         return true;
     }
 }

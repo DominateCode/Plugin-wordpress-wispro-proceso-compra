@@ -1,6 +1,4 @@
-<?php defined('ABSPATH') or die("adios adios"); 
-
-?>
+<?php defined('ABSPATH') or die("adios adios"); ?>
 <div class="wrap color-secundario-bg px-2 pb-2 pt-5">
   <h2 class="has-text-align-center text-white mx-3">Compra tu Plan en 3 pasos</h2>
   <!-- Pills navs -->
@@ -9,7 +7,7 @@
       <a class="nav-link link-white" aria-current="page" id="ex1-tab-1" data-mdb-toggle="pill" href="#ex1-pills-1" role="tab"
         aria-controls="ex1-pills-1" aria-selected="true">
         <div class="rounded-circle mx-auto circulo-contenedor-border-left">
-          <div class="color-terciario rounded-circle mx-auto circulo-contenedor fs-3">1</div>
+          <div class="color-terciario rounded-circle mx-auto circulo-contenedor <?php echo (isset($_GET['paso']) && $_GET['paso'] == 1)? 'circulo-contenedor-selected' : ''; echo(isset($_GET['paso']) && $_GET['paso'] != 1)?'bg-light': ''; echo (!isset($_GET['paso'])) ? 'circulo-contenedor-selected' : ''; ?> fs-3">1</div> 
         </div>  
         <span class="BwSurcoDemo-Regular">Elige tu plan</span>
       </a>
@@ -18,7 +16,7 @@
       <a class="nav-link link-white" id="ex1-tab-2" data-mdb-toggle="pill" href="#ex1-pills-2" role="tab"
         aria-controls="ex1-pills-2" aria-selected="false">
         <div class="rounded-circle mx-auto circulo-contenedor-border-left">
-          <div class="color-terciario rounded-circle mx-auto circulo-contenedor  fs-3">2</div>
+          <div class="color-terciario rounded-circle mx-auto circulo-contenedor <?php echo (isset($_GET['paso']) && $_GET['paso'] == 2)? 'circulo-contenedor-selected' : 'bg-light'; ?> fs-3">2</div>
         </div>
         <span class="BwSurcoDemo-Regular">Datos de compra </span>
       </a>
@@ -27,7 +25,7 @@
       <a class="nav-link link-white" id="ex1-tab-3" data-mdb-toggle="pill" href="#ex1-pills-3" role="tab"
         aria-controls="ex1-pills-3" aria-selected="false"> 
         <div class="rounded-circle mx-auto circulo-contenedor-border-left">
-          <div class="color-terciario rounded-circle mx-auto circulo-contenedor  fs-3">3</div>
+          <div class="color-terciario rounded-circle mx-auto circulo-contenedor <?php echo (isset($_GET['paso']) && $_GET['paso'] == 3)? 'circulo-contenedor-selected' : 'bg-light'; ?> fs-3">3</div>
         </div>
         <span class="BwSurcoDemo-Regular">Finalizar compra</span>
       </a>

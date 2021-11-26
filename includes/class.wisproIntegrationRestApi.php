@@ -5,7 +5,7 @@ class wisproIntegrationRestApi {
     private $api_url = 'https://www.cloud.wispro.co/api/v1/';
     private $api_key = '';
     private $api_secret = '';
-    private $api_token = 'ee6e84ac-0279-45e5-a080-1db9f044ffab';
+    private $api_token = '';
    
     //public function __construct($api_key, $api_secret) {
     public function __construct() {

@@ -18,34 +18,37 @@ Author URI: http://DominateCode-co.com/
 Licence: 
 */
 defined('ABSPATH') or die("Bye bye");
-define('PATH_WISPINTEG',plugin_dir_path(__FILE__));
+define('WISPROINTEGRATION_PLUGIN_DIR', plugin_dir_path(__FILE__));
 
-include(PATH_WISPINTEG.'/opciones.php');
-include(PATH_WISPINTEG.'/actions.php');
+include(WISPROINTEGRATION_PLUGIN_DIR.'/opciones.php');
+include(WISPROINTEGRATION_PLUGIN_DIR.'/actions.php');
 
 //cargar classes 
 if(!class_exists('WP_List_Table')){
    require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
-require_once PATH_WISPINTEG.'/includes/class-table-planes.php';
-require_once PATH_WISPINTEG.'/includes/class-wisprointegration.php';
-require_once PATH_WISPINTEG.'/includes/class-wisprointegrationRestApi.php';
+require_once(WISPROINTEGRATION_PLUGIN_DIR.'/includes/class.table-planes.php');
+require_once(WISPROINTEGRATION_PLUGIN_DIR.'/includes/class.wisprointegration.php');
+require_once(WISPROINTEGRATION_PLUGIN_DIR.'/includes/class.wisproIntegrationRestApi.php');
 
 //Función que se ejecuta cuando el plugin es activado
 function wispro_integration_activar(){
    //crear options para el plugin.
+   add_option('wispro_integration_costo_instalacion','',NULL,'yes');
    add_option('wisprointegration_api_token', '', NULL, 'yes');
    add_option('wisprointegration_api_url', '', NULL, 'yes');
+   add_option('wisprointegration_pagina_proceso_compras', '', NULL, 'yes');
+   add_option('wisprointegration_whatsapp_number', '', NULL, 'yes');
+
+   //crear tabla de planes
+   wispro_integration_crear_tabla_planes();
 }
 register_activation_hook(__FILE__, 'wispro_integration_activar');
 
 //función que se ejecuta cuando el plugin es desactivado
 function wispro_integration_desactivar(){
    //eliminar options del plugin.
-   delete_option('wisprointegration_costo_instalacion');
-   delete_option('wisprointegration_api_token');
-   delete_option('wisprointegration_api_url');
-   
+
 } 
 register_deactivation_hook(__FILE__, 'wispro_integration_desactivar');
 
@@ -74,4 +77,3 @@ function wispro_integration_crear_tabla_planes(){
    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
    dbDelta($sql);
 } 
-register_activation_hook(__FILE__, 'wispro_integration_crear_tabla_planes');
