@@ -107,4 +107,30 @@ class wisproIntegrationRestApi {
         $response_body = json_decode($response['body']);
         return $response_body;
     }
+    //clients_payment_gateways
+    public function getPaymentGateways() {
+        $url = $this->api_url . 'clients/payment-gateways';
+        $args = array(
+            'headers' => array(
+                'Authorization' =>  $this->api_token,
+                'Content-Type' => 'application/json'
+            )
+        );
+        $response = wp_remote_get($url, $args);
+        $response_body = json_decode($response['body']);
+        return $response_body;
+    }
+    //obtener todos los pagos
+    public function getPayments() {
+        $url = $this->api_url . 'invoicing/payments';
+        $args = array(
+            'headers' => array(
+                'Authorization' =>  $this->api_token,
+                'Content-Type' => 'application/json'
+            )
+        );
+        $response = wp_remote_get($url, $args);
+        $response_body = json_decode($response['body']);
+        return $response_body;
+    }
 }

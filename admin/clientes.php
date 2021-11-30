@@ -1,5 +1,8 @@
 <?php defined('ABSPATH') or die("Bye bye");
 if (! current_user_can ('manage_options')) wp_die (__ ('No tienes suficientes permisos para acceder a esta página.'));
+
+//Pagina de listado y registro de clientes desde la rest api wispro cloud. 
+
 $wispro_class = new wisprointegration();
 ?>
 <div class="wrap">
@@ -16,8 +19,10 @@ $wispro_class = new wisprointegration();
 <?php
 
 function get_table(){
-    $testListTable = new table_planes();
+    $testListTable = new table_clientes();
     $testListTable->prepare_items();
     $testListTable->display();
 }
+
+//clients_payment_gateways
 

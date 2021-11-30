@@ -75,7 +75,6 @@ function actions(){
 //llenar tabla planes desde wispro cloud
 function wispro_cloud_importar_planes(){
    global $wpdb;
-   $wispro = new WisproIntegrationRestApi();
    $planes = $wispro->getPlans();
    //echo '<script> console.log('.$planes.')</script>';
    foreach ($planes->data as $key) {

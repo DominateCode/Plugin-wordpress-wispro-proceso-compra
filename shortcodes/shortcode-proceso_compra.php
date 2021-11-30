@@ -64,7 +64,7 @@
                       echo $plan->estrato; 
                       echo '</p>
                       <p class="m-0 text-center BwSurcoDemo-Regular"> Instalación en 24 horas</p>
-                      <a href="http://wa.me/number" target="_blank"
+                      <a href="http://wa.me/'.get_option('wisprointegration_whatsapp_number').'" target="_blank"
                         class="btn color-terciario-bg mb-2 BwSurcoDemo-Regular w-75 mx-auto d-block"><svg xmlns="http://www.w3.org/2000/svg"
                           width="16" height="16" fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16">
                           <path fill-rule="evenodd"

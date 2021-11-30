@@ -26,6 +26,14 @@ function prefijo_menu_admin() {
         'manage_options',
         WISPROINTEGRATION_PLUGIN_DIR.'admin/pagos.php'
     );
+    
+    add_submenu_page(
+        WISPROINTEGRATION_PLUGIN_DIR.'admin/general.php',
+        'Clientes',
+        'Clientes',
+        'manage_options',
+        WISPROINTEGRATION_PLUGIN_DIR.'admin/clientes.php'
+    );
 
     add_submenu_page(
         WISPROINTEGRATION_PLUGIN_DIR.'admin/general.php',

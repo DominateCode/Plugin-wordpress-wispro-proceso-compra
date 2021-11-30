@@ -27,12 +27,15 @@ include(WISPROINTEGRATION_PLUGIN_DIR.'/actions.php');
 if(!class_exists('WP_List_Table')){
    require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
-require_once(WISPROINTEGRATION_PLUGIN_DIR.'/includes/class.table-planes.php');
-require_once(WISPROINTEGRATION_PLUGIN_DIR.'/includes/class.wisprointegration.php');
 require_once(WISPROINTEGRATION_PLUGIN_DIR.'/includes/class.wisproIntegrationRestApi.php');
+require_once(WISPROINTEGRATION_PLUGIN_DIR.'/includes/class.wisprointegration.php');
+require_once(WISPROINTEGRATION_PLUGIN_DIR.'/includes/class.table-planes.php');
+require_once(WISPROINTEGRATION_PLUGIN_DIR.'/includes/class.table-clientes.php');
+require_once(WISPROINTEGRATION_PLUGIN_DIR.'/includes/class.table-pagos.php');
 
 //Función que se ejecuta cuando el plugin es activado
 function wispro_integration_activar(){
+   load_plugin_textdomain('wisprointegration');
    //crear options para el plugin.
    add_option('wispro_integration_costo_instalacion','',NULL,'yes');
    add_option('wisprointegration_api_token', '', NULL, 'yes');
@@ -41,13 +44,30 @@ function wispro_integration_activar(){
    add_option('wisprointegration_whatsapp_number', '', NULL, 'yes');
 
    //crear tabla de planes
-   wispro_integration_crear_tabla_planes();
+   global $wpdb;
+   $tabla_planes = $wpdb->prefix . 'wispro_integration_planes';
+   if ( $wpdb->get_var("SHOW TABLES LIKE '$tabla_planes'") != $tabla_planes ) {
+      // Table was not created !!
+      $charset_collate = $wpdb->get_charset_collate();
+      $sql = "CREATE TABLE $tabla_planes (
+         id varchar(38) NOT NULL,
+         nombre VARCHAR(255) NOT NULL,
+         estrato varchar(16),
+         post_id bigint(20),
+         precio VARCHAR(255) NOT NULL,
+         subida_kb int(3) NOT NULL,
+         descarga_kb int(3) NOT NULL,
+         num_dispositivos int(2),
+         PRIMARY KEY (id)
+      ) $charset_collate;";
+      require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+      dbDelta($sql);
+   }
 }
 register_activation_hook(__FILE__, 'wispro_integration_activar');
 
 //función que se ejecuta cuando el plugin es desactivado
 function wispro_integration_desactivar(){
-   //eliminar options del plugin.
 
 } 
 register_deactivation_hook(__FILE__, 'wispro_integration_desactivar');
@@ -58,22 +78,3 @@ function scripts(){
    wp_enqueue_script('wispro_integration_js', plugins_url('/js/wispro_integration.js', __FILE__), array('jquery'));
 }
 add_action('wp_enqueue_scripts', 'scripts');
-
-//crear tabla de planes de wispro en la base de datos
-function wispro_integration_crear_tabla_planes(){
-   global $wpdb;
-   $tabla_planes = $wpdb->prefix . 'wispro_integration_planes';
-   $sql = "CREATE TABLE IF NOT EXISTS $tabla_planes (
-      id VARCHAR(38) NOT NULL AUTO_INCREMENT,
-      nombre VARCHAR(255) NOT NULL,
-      estrato varchar(),
-      post_id bigint(20),
-      precio VARCHAR(255) NOT NULL,
-      subida_kb int(3) NOT NULL,
-      descarga_kb int(3) NOT NULL,
-      num_dispositivos int(3),
-      PRIMARY KEY (id)
-   )";
-   require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-   dbDelta($sql);
-} 

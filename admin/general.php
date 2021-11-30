@@ -1,4 +1,4 @@
-<?php
+<?php defined('ABSPATH') or die("Bye bye");
 if (! current_user_can ('manage_options')) wp_die (__ ('No tienes suficientes permisos para acceder a esta página.'));
 
 $wispro_class = new wisprointegration();
@@ -42,6 +42,13 @@ $wispro_class = new wisprointegration();
 						</select>
 					</td>
 				</tr>
+				<!-- option whatsapp number -->
+				<tr valign="top">
+					<th scope="row"><?php _e( 'Número de whatsapp','Wispro_integraton' ) ?></th>
+					<td>
+						<input type="text" name="whatsapp_number" value="<?php echo esc_attr( get_option('wisprointegration_whatsapp_number') ); ?>" />
+					</td>
+				</tr>
 			</table>
 			<?php submit_button(); ?>
 		</form>
@@ -63,5 +70,11 @@ function actions(){
 	if (isset($_POST['page_compras'])) {
 		update_option ('wisprointegration_pagina_proceso_compras', $_POST['page_compras']);
 		echo '<div class="updated"><p>' . __('Página del proceso de compras actualizada.') . '</p></div>';
+	}
+	if (isset($_POST['whatsapp_number'])) {
+		$number = str_replace(" ", "", $_POST['whatsapp_number']); 
+		$number = str_replace("+", "", $number); 
+		update_option ('wisprointegration_whatsapp_number', $number);
+		echo '<div class="updated"><p>' . __('Número de whatsapp actualizado.') . '</p></div>';
 	}
 } 
