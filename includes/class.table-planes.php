@@ -285,7 +285,7 @@ class table_planes extends WP_List_Table {
             
         //form edit plan
         $id = $_GET['plan'];
-        $plan = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpdb->prefix" . "wispro_integration_planes WHERE id = %d", $id));
+        $plan = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpdb->prefix" . "wispro_integration_planes WHERE id = '%s'", $id));
         $plan_name = $plan->nombre;
         $plan_price = $plan->precio;
         $plan_subida = $plan->subida_kb;
@@ -295,6 +295,7 @@ class table_planes extends WP_List_Table {
         $estrato = $plan->estrato;
         $dispositivos = $plan->num_dispositivos;
         
+
         $html = '<div class="wrap">';
         $html .= '<h3>Editar plan</h3>';
         $html .= '<form method="post" action="">';
