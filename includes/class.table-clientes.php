@@ -95,7 +95,7 @@ class table_clientes extends WP_List_Table {
         //Return the title contents
         return sprintf('%1$s <span style="color:silver"> %2$s</span>',
             /*$1%s*/ $item->name,
-            /*$2%s*/ $item->address,
+            /*$2%s*/ $item->address
             /*$3%s*/// $this->row_actions($actions)
         );
     }
