@@ -29,9 +29,6 @@ if(!class_exists('WP_List_Table')){
 }
 require_once(WISPROINTEGRATION_PLUGIN_DIR.'/includes/class.wisproIntegrationRestApi.php');
 require_once(WISPROINTEGRATION_PLUGIN_DIR.'/includes/class.wisprointegration.php');
-require_once(WISPROINTEGRATION_PLUGIN_DIR.'/includes/class.table-planes.php');
-require_once(WISPROINTEGRATION_PLUGIN_DIR.'/includes/class.table-clientes.php');
-require_once(WISPROINTEGRATION_PLUGIN_DIR.'/includes/class.table-pagos.php');
 
 //Función que se ejecuta cuando el plugin es activado
 function wispro_integration_activar(){
@@ -42,6 +39,7 @@ function wispro_integration_activar(){
    add_option('wisprointegration_api_url', '', NULL, 'yes');
    add_option('wisprointegration_pagina_proceso_compras', '', NULL, 'yes');
    add_option('wisprointegration_whatsapp_number', '', NULL, 'yes');
+   add_option('wisprointegration_url_portal_cliente','', NULL, 'yes');
 
    //crear tabla de planes
    global $wpdb;

@@ -1,7 +1,7 @@
 <?php
 
 
-class table_clientes extends WP_List_Table {
+class table_pagos extends WP_List_Table {
     
     /** ************************************************************************
      * Normally we would be querying data from a database and manipulating that
@@ -56,11 +56,10 @@ class table_clientes extends WP_List_Table {
      **************************************************************************/
     function column_default($item, $column_name){
         switch($column_name){
-            case 'city':
             case 'state':
-            case 'email':
-            case 'phone_mobile':
-            case 'title':
+            case 'payment_date':
+            case 'amount':
+            case 'client_name':
                 return $item->$column_name;
             default:
                 return print_r($item,true); //Show the whole array for troubleshooting purposes
@@ -83,7 +82,7 @@ class table_clientes extends WP_List_Table {
      * @param array $item A singular item (one full row's worth of data)
      * @return string Text to be placed inside the column <td> (movie title only)
      **************************************************************************/
-    function column_title($item){
+    function column_client_name($item){
         
         //Build row actions
         $actions = array(
@@ -95,8 +94,8 @@ class table_clientes extends WP_List_Table {
         //Return the title contents
         return sprintf('%1$s <span style="color:silver"> %2$s</span>',
             /*$1%s*/ $item->name,
-            /*$2%s*/ $item->address
-            /*$3%s*/// $this->row_actions($actions)
+            /*$2%s*/ $item->address,
+            /*$3%s*/ //$this->row_actions($actions)
         );
     }
 
@@ -135,11 +134,10 @@ class table_clientes extends WP_List_Table {
     function get_columns(){
         $columns = array(
             'cb'       => '<input type="checkbox" />', //Render a checkbox instead of text
-            'title'   => 'Nombre',
-            'phone_mobile'  => 'Celular',
-            'email'   => 'email',
+            'client_name'   => 'Cliente',
+            'amount'  => 'Monto',
+            'payment_date'   => 'Fecha de pago',
             'state' => 'Estado',
-            'city' => 'Ciudad',
         );
         return $columns;
     }
@@ -161,11 +159,10 @@ class table_clientes extends WP_List_Table {
      **************************************************************************/
     function get_sortable_columns() {
         $sortable_columns = array(
-            'title'     => array('nombre',false),     //true means it's already sorted
-            'phone_mobile'    => array('phone_mobile',false),
-            'email'  => array('email',false),
+            'client_name'     => array('client_name',false),     //true means it's already sorted
+            'amount'    => array('amount',false),
+            'payment_date'  => array('payment_date',false),
             'state'  => array('state',false),
-            'city'  => array('city',false),
         );
         return $sortable_columns;
     }
@@ -204,7 +201,7 @@ class table_clientes extends WP_List_Table {
         
         //Detect when a bulk action is being triggered...
         if( 'delete'===$this->current_action() ) {
-           // $this->delete_plan();
+            //$this->delete_plan();
         }
 
         if( 'edit' === $this->current_action() ) {
@@ -235,7 +232,7 @@ class table_clientes extends WP_List_Table {
         /**
          * First, lets decide how many records per page to show
          */
-        $per_page = 5;
+        $per_page = 10;
         
         
         /**
@@ -277,10 +274,7 @@ class table_clientes extends WP_List_Table {
          */
 
         $wispro_api = new WisproIntegrationRestApi();
-        $data = $wispro_api->getClients()->data;
-
-        //echo script console.log data
-        echo "<script>console.log(".json_encode($data).")</script>";
+        $data = $wispro_api->remote_GET('invoicing/payments')->data;
         
         /**
          * This checks for sorting input and sorts the data in our array accordingly.

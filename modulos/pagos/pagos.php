@@ -1,10 +1,12 @@
 <?php defined('ABSPATH') or die("Bye bye");
 if (! current_user_can ('manage_options')) wp_die (__ ('No tienes suficientes permisos para acceder a esta página.'));
 
+require_once('class.table-pagos.php');
+
+
 //pagina de listado de pagos en rest api wispro cloud.
 //tabla pagos wispro cloud
 $wispro_class = new wisprointegration();
-$wispro_api = new wisproIntegrationRestApi();
 // script echo console.log pagos
 ?>
 <div class="wrap">

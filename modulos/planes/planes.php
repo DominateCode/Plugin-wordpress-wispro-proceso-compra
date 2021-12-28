@@ -1,5 +1,8 @@
 <?php defined('ABSPATH') or die("Bye bye");
 if (! current_user_can ('manage_options')) wp_die (__ ('No tienes suficientes permisos para acceder a esta página.'));
+
+require_once('class.table-planes.php');
+
 $wispro_class = new wisprointegration();
 ?>
 <div class="wrap">

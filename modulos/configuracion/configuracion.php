@@ -76,7 +76,7 @@ function actions(){
 function wispro_cloud_importar_planes(){
    global $wpdb;
    $wispro_api = new wisproIntegrationRestApi();
-   $planes = $wispro_api->getPlans();
+   $planes = $wispro_api->remote_GET('plans');
    //echo '<script> console.log('.$planes.')</script>';
    foreach ($planes->data as $key) {
       //comprobar si existe el plan en la tabla sql

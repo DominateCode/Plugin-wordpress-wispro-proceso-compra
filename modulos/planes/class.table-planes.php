@@ -279,7 +279,7 @@ class table_planes extends WP_List_Table {
             if(false === $update){
                 echo '<script>alert("Error al actualizar el plan");</script>';
             }else{
-                echo '<script>window.location.href = "?page=wisprointegration%2Fadmin%2Fplanes.php";</script>';
+                echo '<script>window.location.href = "?page=wisprointegration%2Fmodulos%2Fplanes%2Fplanes.php";</script>';
             }
         }
             

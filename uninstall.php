@@ -6,23 +6,19 @@ if (!defined('WP_UNINSTALL_PLUGIN')) {
     die;
 }
 
-delete_option('wisprointegration_api_url');
-delete_site_option('wisprointegration_api_url');
+$options = [
+    'wisprointegration_api_url',
+    'wisprointegration_api_token',
+    'wispro_integration_costo_instalacion',
+    'wisprointegration_pagina_proceso_compras',
+    'wisprointegration_whatsapp_number',
+    'wisprointegration_url_portal_cliente'
+];
 
-delete_option('wisprointegration_api_token');
-delete_site_option('wisprointegration_api_token');
-
-delete_option('wispro_integration_costo_instalacion');
-delete_site_option('wispro_integration_costo_instalacion');
-
-delete_option('wisprointegration_pagina_proceso_compras');
-delete_site_option('wisprointegration_pagina_proceso_compras');
-
-delete_option('wisprointegration_whatsapp_number');
-delete_site_option('wisprointegration_whatsapp_number');
-
-delete_option('wisprointegration_pagina_proceso_compras');
-delete_site_option('wisprointegration_pagina_proceso_compras');
+foreach ($options as $op){
+    delete_option($op);
+    delete_site_option($op);
+}
 
 //remove table sql
 global $wpdb;

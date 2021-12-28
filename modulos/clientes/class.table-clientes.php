@@ -1,7 +1,7 @@
 <?php
 
 
-class table_pagos extends WP_List_Table {
+class table_clientes extends WP_List_Table {
     
     /** ************************************************************************
      * Normally we would be querying data from a database and manipulating that
@@ -56,10 +56,11 @@ class table_pagos extends WP_List_Table {
      **************************************************************************/
     function column_default($item, $column_name){
         switch($column_name){
+            case 'city':
             case 'state':
-            case 'payment_date':
-            case 'amount':
-            case 'client_name':
+            case 'email':
+            case 'phone_mobile':
+            case 'title':
                 return $item->$column_name;
             default:
                 return print_r($item,true); //Show the whole array for troubleshooting purposes
@@ -82,7 +83,7 @@ class table_pagos extends WP_List_Table {
      * @param array $item A singular item (one full row's worth of data)
      * @return string Text to be placed inside the column <td> (movie title only)
      **************************************************************************/
-    function column_client_name($item){
+    function column_title($item){
         
         //Build row actions
         $actions = array(
@@ -94,8 +95,8 @@ class table_pagos extends WP_List_Table {
         //Return the title contents
         return sprintf('%1$s <span style="color:silver"> %2$s</span>',
             /*$1%s*/ $item->name,
-            /*$2%s*/ $item->address,
-            /*$3%s*/ //$this->row_actions($actions)
+            /*$2%s*/ $item->address
+            /*$3%s*/// $this->row_actions($actions)
         );
     }
 
@@ -134,10 +135,11 @@ class table_pagos extends WP_List_Table {
     function get_columns(){
         $columns = array(
             'cb'       => '<input type="checkbox" />', //Render a checkbox instead of text
-            'client_name'   => 'Cliente',
-            'amount'  => 'Monto',
-            'payment_date'   => 'Fecha de pago',
+            'title'   => 'Nombre',
+            'phone_mobile'  => 'Celular',
+            'email'   => 'email',
             'state' => 'Estado',
+            'city' => 'Ciudad',
         );
         return $columns;
     }
@@ -159,10 +161,11 @@ class table_pagos extends WP_List_Table {
      **************************************************************************/
     function get_sortable_columns() {
         $sortable_columns = array(
-            'client_name'     => array('client_name',false),     //true means it's already sorted
-            'amount'    => array('amount',false),
-            'payment_date'  => array('payment_date',false),
+            'title'     => array('nombre',false),     //true means it's already sorted
+            'phone_mobile'    => array('phone_mobile',false),
+            'email'  => array('email',false),
             'state'  => array('state',false),
+            'city'  => array('city',false),
         );
         return $sortable_columns;
     }
@@ -201,13 +204,97 @@ class table_pagos extends WP_List_Table {
         
         //Detect when a bulk action is being triggered...
         if( 'delete'===$this->current_action() ) {
-            //$this->delete_plan();
+           // $this->delete_plan();
         }
 
         if( 'edit' === $this->current_action() ) {
             //$this->edit_plan();
         }
+
+        if( 'crear' === $this->current_action() ) {
+            $this->crear_cliente();
+        }
         
+    }
+
+    function crear_cliente(){
+        if(isset($_POST['submit'])){
+            //form add new client
+            //email de portal de clientes, nombre completo, telefono fijo, departamento, ciudad, barrio, direccion, celular, doc cedula, observaciones, vendedor, recaudador, zona
+            $client = array(
+                'email' => $_POST['email'],
+                'name' => $_POST['name'],
+                'phone' => $_POST['phone'],
+                'state' => $_POST['state'],
+                'city' => $_POST['city'], 
+                'address' => $_POST['address'],
+                'phone_mobile' => $_POST['phone_mobile'],
+                'national_identification_number' => $_POST['national_identification_number'],
+                'details' => $_POST['details'],
+            );
+            
+            $wispro_api = new WisproIntegrationRestApi();
+            $data = $wispro_api->remote_GET('/clients', $client);
+
+            if($data->status == '200'){
+                echo '<div class="updated"><p>Client added successfully</p></div>';
+                echo '<script>window.location.href = "?page=wisprointegration%2Fmodulos%2Fclientes%2Fclientes.php";</script>';
+            }elseif ($data->status == '400') {
+                echo '<div class="error"><p>'.$data->message.'</p></div>';
+            }else{
+                echo '<div class="error"><p>'.$data->status.$data->message.'</p></div>';
+            }
+        }
+
+        $html = '<div class="wrap"><div id="icon-users" class="icon32"><br/></div>';
+        $html .= '<h2>Crear Cliente</h2>';
+        $html .= '<form method="post" action="">';
+        $html .= '<table class="form-table">';
+        $html .= '<tbody>';
+        $html .= '<tr>';
+        $html .= '<th scope="row"><label for="email">Email</label></th>';
+        $html .= '<td><input name="email" type="text" id="email" value="" class="regular-text"></td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<th scope="row"><label for="name">Nombre</label></th>';
+        $html .= '<td><input name="name" type="text" id="name" value="" class="regular-text"></td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<th scope="row"><label for="phone">Telefono</label></th>';
+        $html .= '<td><input name="phone" type="text" id="phone" value="" class="regular-text"></td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<th scope="row"><label for="state">Departamento</label></th>';
+        $html .= '<td><input name="state" type="text" id="state" value="" class="regular-text"></td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<th scope="row"><label for="city">Ciudad</label></th>';
+        $html .= '<td><input name="city" type="text" id="city" value="" class="regular-text"></td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<th scope="row"><label for="address">Direccion</label></th>';
+        $html .= '<td><input name="address" type="text" id="address" value="" class="regular-text"></td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<th scope="row"><label for="phone_mobile">Celular</label></th>';
+        $html .= '<td><input name="phone_mobile" type="text" id="phone_mobile" value="" class="regular-text"></td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<th scope="row"><label for="national_identification_number">Cedula</label></th>';
+        $html .= '<td><input name="national_identification_number" type="text" id="national_identification_number" value="" class="regular-text"></td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<th scope="row"><label for="details">Observaciones</label></th>';
+        $html .= '<td><input name="details" type="text" id="details" value="" class="regular-text"></td>';
+        $html .= '</tr>';
+        $html .= '</tbody>';
+        $html .= '</table>';
+        $html .= '<p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Crear Cliente"></p>';
+        $html .= '</form>';
+        $html .= '</div>';
+
+        echo $html;
+        wp_die();
     }
 
 
@@ -274,11 +361,7 @@ class table_pagos extends WP_List_Table {
          */
 
         $wispro_api = new WisproIntegrationRestApi();
-        $data = $wispro_api->getPayments()->data;
-
-
-        //echo script console.log data
-        echo "<script>console.log(".json_encode($data).")</script>";
+        $data = $wispro_api->remote_GET('clients')->data;
         
         /**
          * This checks for sorting input and sorts the data in our array accordingly.
@@ -352,6 +435,4 @@ class table_pagos extends WP_List_Table {
             'total_pages' => ceil($total_items/$per_page)   //WE have to calculate the total number of pages
         ) );
     }
-
-
 }

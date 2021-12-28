@@ -9,10 +9,51 @@ class wisproIntegrationRestApi {
    
     //public function __construct($api_key, $api_secret) {
     public function __construct() {
-        //$this->api_key = $api_key;
-        //$this->api_secret = $api_secret;
+        /* descomentar  si se utiliza la api_key y la api_secret.
+         * $this->api_key = $this->get_api_key();
+         * $this->api_secret = $this->get_api_secret();
+         */
         $this->api_url = $this->get_api_url();
         $this->api_token = $this->getToken();
+    }
+
+    public function remote_GET($endpoint, $params = []){
+        $params = ($params != '') ? $this->get_params($params) : '';
+        $url = $this->api_url . $endpoint . '?' . $params;
+        $args = array(
+            'headers' => array(
+                'Authorization' => $this->api_token,
+                'Content-Type' => 'application/json'
+            )
+        );
+        $response = wp_remote_get($url, $args);
+        $response_body = json_decode($response['body']);
+        return $response_body;
+    }
+
+    public function remote_POST($endpoint, $params = []){
+        $params = ($params != '') ? $this->get_params($params) : '';
+        $url = $this->api_url . $endpoint;
+        $args = array(
+            'headers' => array(
+                'Authorization' => $this->api_token,
+                'Content-Type' => 'application/json'
+            ),
+            'data' => $params
+        );
+        $response = wp_remote_post($url, $args);
+        $response_body = json_decode($response['body']);
+        return $response_body;
+    }
+
+    //function create client on wispro cloud rest api
+
+
+    public function get_params($params){
+        //descomentar la siguiente linea si se utiliza la api_key  y la api_secret.
+        //$params = array_merge($params, array('api_key' => $this->api_key, 'api_secret' => $this->api_secret));
+        $params = http_build_query($params);
+        return $params;
     }
 
     public function get_api_url() {
@@ -20,117 +61,18 @@ class wisproIntegrationRestApi {
         return $this->api_token;
     }
 
-    public function getToken() {
+    private function getToken() {
         $this->api_token = get_option('wisprointegration_api_token');
-        //if(empty($this->api_token)) {
-          //  $this->api_token = $this->getNewToken();
-        //}
         return $this->api_token;
     }
 
-    public function getClients() {
-        $url = $this->api_url . 'clients';
-        $args = array(
-            'headers' => array(
-                'Authorization' => $this->api_token,
-                'Content-Type' => 'application/json'
-            )
-        );
-        $response = wp_remote_get($url, $args);
-        $response_body = json_decode($response['body']);
-        return $response_body;
+    private function get_api_key() {
+        $this->api_key = get_option('wisprointegration_api_key');
+        return $this->api_key;
     }
 
-    public function getPlans() {
-        $url = $this->api_url . 'plans';
-        $args = array(
-            'headers' => array(
-                'Authorization' => $this->api_token,
-                'Content-Type' => 'application/json'
-            )
-        );
-        $response = wp_remote_get($url, $args);
-        $response_body = json_decode($response['body']);
-        return $response_body;
-    }
-
-    public function getClient($client_id) {
-        $url = $this->api_url . 'clients/' . $client_id;
-        $args = array(
-            'headers' => array(
-                'Authorization' =>  $this->api_token,
-                'Content-Type' => 'application/json'
-            )
-        );
-        $response = wp_remote_get($url, $args);
-        $response_body = json_decode($response['body']);
-        return $response_body;
-    }
-
-    public function getPlan($plan_id) {
-        $url = $this->api_url . 'plans/' . $plan_id;
-        $args = array(
-            'headers' => array(
-                'Authorization' =>  $this->api_token,
-                'Content-Type' => 'application/json'
-            )
-        );
-        $response = wp_remote_get($url, $args);
-        $response_body = json_decode($response['body']);
-        return $response_body;
-    }
-
-    public function createClient($client_data) {
-        $url = $this->api_url . 'clients';
-        $args = array(
-            'headers' => array(
-                'Authorization' =>  $this->api_token,
-                'Content-Type' => 'application/json'
-            ),
-            'body' => json_encode($client_data)
-        );
-        $response = wp_remote_post($url, $args);
-        $response_body = json_decode($response['body']);
-        return $response_body;
-    }
-
-    public function createpayment($payment_data) {
-        $url = $this->api_url . '/invoicing/payments';
-        $args = array(
-            'headers' => array(
-                'Authorization' =>  $this->api_token,
-                'Content-Type' => 'application/json'
-            ),
-            'body' => json_encode($payment_data)
-        );
-        $response = wp_remote_post($url, $args);
-        $response_body = json_decode($response['body']);
-        return $response_body;
-    }
-    //clients_payment_gateways
-    public function getPaymentGateways() {
-        $url = $this->api_url . 'clients/payment-gateways';
-        $args = array(
-            'headers' => array(
-                'Authorization' =>  $this->api_token,
-                'Content-Type' => 'application/json'
-            )
-        );
-        $response = wp_remote_get($url, $args);
-        $response_body = json_decode($response['body']);
-        return $response_body;
-    }
-    //obtener todos los pagos
-    public function getPayments() {
-        $url = $this->api_url . 'invoicing/payments';
-        $args = array(
-            'headers' => array(
-                'Authorization' =>  $this->api_token,
-                'Content-Type' => 'application/json'
-            )
-        );
-        $response = wp_remote_get($url, $args);
-        $response_body = json_decode($response['body']);
-        return $response_body;
+    private function get_api_secret() {
+        $this->api_secret = get_option('wisprointegration_api_secret');
+        return $this->api_secret;
     }
 }

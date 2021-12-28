@@ -15,7 +15,7 @@ $wispro_class = new wisprointegration();
 		?>
 		<!-- html content -->
 		<!-- begind: form opcion costo instalacion -->
-		<form method="post" action="<?php echo admin_url('admin.php?page=wisprointegration%2Fadmin%2Fgeneral.php'); ?>">
+		<form method="post" action="<?php echo admin_url('admin.php?page=wisprointegration%2fmodulos%2Fgeneral%2Fgeneral.php'); ?>">
 			<?php settings_fields( 'wisprointegration_options' ); ?>
 			<?php do_settings_sections( 'wisprointegration_options' ); ?>
 			<table class="form-table">

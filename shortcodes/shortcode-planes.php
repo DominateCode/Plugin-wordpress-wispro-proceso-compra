@@ -41,8 +41,7 @@
                           </path>
                         </svg> Compra en línea </a>
                       <p class="text-center monserrat-extrabold">
-                        <small class="text-muted"><a rel="nofollow" href="javascript:modal_post('.$plan->post_id.')" data-bs-toggle="modal"
-                            data-bs-target="#modal25megas">Más especificaciones</a></small>
+                        <small class="text-muted"><a rel="nofollow" href="javascript:modal_post('.$plan->post_id.')" data-bs-toggle="modal" data-bs-target="#modal25megas">Más especificaciones</a></small>
                       </p>
                     </div>
                   </div>
