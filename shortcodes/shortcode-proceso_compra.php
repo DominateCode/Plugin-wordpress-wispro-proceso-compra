@@ -1,64 +1,13 @@
 <?php defined('ABSPATH') or die("adios adios"); 
 
   echo '<script type="text/javascript"> console.log('.json_encode($_POST).'); </script>';
- 
-  $proceso = proceso_compra();
-  $message = $proceso['message'];
 
-  function proceso_compra(){
-    $respuesta = array();
-    $wispro_api = new WisproIntegrationRestApi();
+  require_once('class.shortcode_proceso_compra.php');
 
-    if(isset($_POST['form_compra'])){
-      //variables
-      $planid = $_POST['plan'];
+  $shortcode_compra = new shortcode_proceso_compra();
+  $proceso = $shortcode_compra->proceso_compra();
+  $message = ($proceso) ? $proceso['message'] : '';
 
-      $client = array(
-        'email' => $_POST['email'],
-        'name' => $_POST['name'],
-        'city' => $_POST['city'], 
-        'address' => $_POST['address'],
-        'phone_mobile' => $_POST['phone_mobile'],
-        'national_identification_number' => $_POST['national_identification_number'],
-        'state' => function(){
-          $ciudad = $_POST['city'];
-          if ($ciudad = 'Miranda') { 
-            return 'Cauca';
-          }
-          if ($ciudad = 'Padilla') { 
-            return 'Cauca';
-          }
-          if ($ciudad = 'Florida') { 
-            return 'Valle';
-          }
-        }
-      );
-
-      //comprobar por cedula si existe el cliente
-      $client_exist = $wispro_api->remote_GET('/clients',[
-        'national_identification_number_eq' => $client['national_identification_number']
-      ]);
-
-      if(!empty($client_exist) && $client_exist->meta->pagination->total_records != 0){
-        $respuesta['message'] = '<div class="alert alert-danger" role="alert">
-         El cliente con el numero de documento '.$client['national_identification_number'].' ya se encuentra registrado.<br>
-         Accede desde <a href="'.get_option('wisprointegration_url_portal_cliente').'">aqui</a> al portal de cliente.
-        </div>';
-      }else{
-        //crear cliente
-       // $client = $wispro_api->remote_POST('/clients',$client);
-
-        $respuesta['message'] = '<div class="alert alert-success" role="alert">
-        A simple success alert—check it out!
-        </div>';
-
-        //crear contrato 
-        ////generar factura inicial
-        //realizar pago de la factura inicial por gateway de pago
-      }
-    }
-    return $respuesta;
-  }
 ?>
 
 <div class="wrap color-secundario-bg px-2 pb-2 pt-5">
@@ -234,7 +183,9 @@
               <!-- formulario de datos del cliente -->
               <input type="hidden" name="plan" value="<?php echo $_GET['plan']; ?>">  
               <input type="hidden" name="form_compra">
-              <input class="form-control" type="text" name="name" placeholder="Nombre Completo">  
+              <input type="hidden" name="latitud" id="latitud">
+              <input type="hidden" name="longitud" id="longitud">
+              <input class="form-control" type="text" name="nombre" placeholder="Nombre Completo">  
               <div class="row">
                 <div class="col-md-6">
                   <select class="form-control" name="identification_type">
@@ -272,23 +223,14 @@
               <button class="btn btn-block color-terciario-bg br-2 p-3" type="submit">Comprar</button>
             </div>
           </form>
-        </div> <?php }else{
-        //get page url
-        echo "<script> 
-        jQuery(document).ready(function($){
-          $('#ex1-pills-1').addClass('active show');
-          $('#ex1-pills-2').removeClass('active show');
-          $('#ex1-pills-3').removeClass('active show');
-        });
-        </script>
-        ";
-      } ?>
-      <div class="row pb-4 px-2 fs-5">
-        <div class="col-3 d-inline text-white BwSurcoDemo-Regular ">¿Necesitas ayuda? <br> Siempre estamos para tí</div>
-        <div class="col align-middle d-inline">
-          <button class="btn btn-block color-terciario-bg br-2 p-3" type="submit">Chatear con un asesor en vivo</button>
+        </div> 
+        <div class="row pb-4 px-2 fs-5">
+          <div class="col-3 d-inline text-white BwSurcoDemo-Regular ">¿Necesitas ayuda? <br> Siempre estamos para tí</div>
+          <div class="col align-middle d-inline">
+            <button class="btn btn-block color-terciario-bg br-2 p-3" type="submit">Chatear con un asesor en vivo</button>
+          </div>
         </div>
-      </div>
+      <?php } ?>
     </div>
 
     <div class="tab-pane fade <?php echo (isset($_GET['paso']) && $_GET['paso'] == '3' ) ? 'show active' : ''; ?> container-fluid" id="ex1-pills-3" role="tabpanel" aria-labelledby="ex1-tab-3">
@@ -305,11 +247,49 @@
 <!-- seleccionar un paquete -->
 
 <!-- scripts -->
+<script>
+  jQuery(document).ready(function($){ 
+    //verificamos si el navegador soporta Geolocation API de HTML5
+    if(navigator.geolocation){
+        //intentamos obtener las coordenadas del usuario
+        navigator.geolocation.getCurrentPosition(function(objPosicion){
+          //almacenamos en variables la longitud y latitud
+          var iLongitud=objPosicion.coords.longitude, 
+            iLatitud=objPosicion.coords.latitude; 
+          $('#latitud').val(iLatitud);
+          $('#longitud').val(iLongitud);
+        },function(objError){
+          //manejamos los errores devueltos por Geolocation API
+          switch(objError.code){
+            //no se pudo obtener la informacion de la ubicacion
+            case objError.POSITION_UNAVAILABLE:
+              alert('La información de tu posición no es posible');
+              break;
+            //timeout al intentar obtener las coordenadas
+            case objError.TIMEOUT:
+              alert("Tiempo de espera agotado");
+              break;
+            //el usuario no desea mostrar la ubicacion
+            case objError.PERMISSION_DENIED:
+              alert('Necesitas permitir tu localización');
+              break;
+            //errores desconocidos
+            case objError.UNKNOWN_ERROR:
+              alert('Error desconocido');
+              break;
+            } 
+        }
+      );
+    }else{
+      //el navegador del usuario no soporta el API de Geolocalizacion de HTML5
+      alert('Tu navegador no soporta la Geolocalización en HTML5');
+    } 
+  });
+</script>
 <script type='text/javascript'>
   function modal_post(id){
     jQuery(document).ready(function($){
       //obtener contenido del post por api wordpress
-      //get domain from site
       $.ajax({
         url: '<?php echo get_site_url(); ?>/wp-json/wp/v2/posts/'+id,
         type: 'GET',
@@ -332,7 +312,6 @@
     });
   });
 </script>
-
 <script  type='text/javascript'>
   function collapse_sorteo() {
     var x = document.getElementById("collapseExample");
