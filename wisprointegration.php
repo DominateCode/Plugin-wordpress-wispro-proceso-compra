@@ -20,15 +20,16 @@ Licence:
 defined('ABSPATH') or die("Bye bye");
 define('WISPROINTEGRATION_PLUGIN_DIR', plugin_dir_path(__FILE__));
 
-include(WISPROINTEGRATION_PLUGIN_DIR.'/opciones.php');
-include(WISPROINTEGRATION_PLUGIN_DIR.'/actions.php');
-
 //cargar classes 
 if(!class_exists('WP_List_Table')){
    require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
 require_once(WISPROINTEGRATION_PLUGIN_DIR.'/includes/class.wisproIntegrationRestApi.php');
 require_once(WISPROINTEGRATION_PLUGIN_DIR.'/includes/class.wisprointegration.php');
+
+include(WISPROINTEGRATION_PLUGIN_DIR.'/opciones.php');
+include(WISPROINTEGRATION_PLUGIN_DIR.'/actions.php');
+require_once(WISPROINTEGRATION_PLUGIN_DIR.'/shortcodes.php');
 
 //Función que se ejecuta cuando el plugin es activado
 function wispro_integration_activar(){
@@ -56,6 +57,7 @@ function wispro_integration_activar(){
          subida_kb int(3) NOT NULL,
          descarga_kb int(3) NOT NULL,
          num_dispositivos int(2),
+         payment_url varchar(255) NOT NULL,
          PRIMARY KEY (id)
       ) $charset_collate;";
       require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
@@ -74,5 +76,6 @@ register_deactivation_hook(__FILE__, 'wispro_integration_desactivar');
 function scripts(){
    wp_enqueue_style('wispro_integration_css', plugins_url('/css/wispro_integration.css', __FILE__));
    wp_enqueue_script('wispro_integration_js', plugins_url('/js/wispro_integration.js', __FILE__), array('jquery'));
+   wp_localize_script('wispro_integration_js', 'wispro_integration_ajax', array('ajaxurl' => admin_url('admin-ajax.php')));
 }
 add_action('wp_enqueue_scripts', 'scripts');

@@ -6,7 +6,7 @@ if (! current_user_can ('manage_options')) wp_die (__ ('No tienes suficientes pe
    Bienvenido a la configuración de Wispro integration
    <?php actions(); ?>
    <div class="">
-      <form method="post" action="<?php echo admin_url('admin.php?page=wisprointegration%2Fadmin%2Fconfiguration.php'); ?>">
+      <form method="post" action="<?php echo admin_url('admin.php?page=wisprointegration%2Fmodulos%2Fconfiguracion%2Fconfiguracion.php'); ?>">
          <?php settings_fields( 'wispro_integration_settings' ); ?>
          <?php do_settings_sections( 'wispro_integration_settings' ); ?>
          <table class="form-table">
@@ -31,7 +31,7 @@ if (! current_user_can ('manage_options')) wp_die (__ ('No tienes suficientes pe
       }else{
          ?>
          <!-- llenar tabla planes desde wispro cloud -->
-         <form method="post" action="<?php echo admin_url('admin.php?page=wisprointegration%2Fadmin%2Fconfiguration.php&action=importar_planes_wispro_cloud'); ?>">
+         <form method="post" action="<?php echo admin_url('admin.php?page=wisprointegration%2Fmodulos%2Fconfiguracion%2Fconfiguracion.php&action=importar_planes_wispro_cloud'); ?>">
             <?php settings_fields( 'wispro_integration_settings' ); ?>
             <?php do_settings_sections( 'wispro_integration_settings' ); ?>
             <table class="form-table">

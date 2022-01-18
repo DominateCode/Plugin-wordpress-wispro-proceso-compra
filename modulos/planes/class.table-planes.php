@@ -266,7 +266,7 @@ class table_planes extends WP_List_Table {
             $plan_id = $_POST['id'];
             $dispositivos = $_POST['num_dispositivos'];
             $estrato = $_POST['plan_estrato'];
-
+            $payment_url = $_POST['payment_url'];
             $update = $wpdb->update($wpdb->prefix . 'wispro_integration_planes', array(
                 'nombre' => $plan_name,
                 'precio' => $plan_price,
@@ -274,10 +274,11 @@ class table_planes extends WP_List_Table {
                 'descarga_kb' => $plan_descarga,
                 'post_id' => $post_id,
                 'num_dispositivos' => $dispositivos,
-                'estrato' => $estrato
+                'estrato' => $estrato,
+                'payment_url' => $payment_url
             ), array( 'id' => $plan_id ));
             if(false === $update){
-                echo '<script>alert("Error al actualizar el plan");</script>';
+                echo '<script>alert("Error al actualizar el plan'.$update.'");</script>';
             }else{
                 echo '<script>window.location.href = "?page=wisprointegration%2Fmodulos%2Fplanes%2Fplanes.php";</script>';
             }
@@ -294,6 +295,7 @@ class table_planes extends WP_List_Table {
         $plan_id = $plan->id;
         $estrato = $plan->estrato;
         $dispositivos = $plan->num_dispositivos;
+        $payment_url = $plan->payment_url;
         
 
         $html = '<div class="wrap">';
@@ -341,6 +343,10 @@ class table_planes extends WP_List_Table {
             $html .= '>'.$post->post_title.'</option>';
         }
         $html .= '</select><a href="'.get_admin_url().'post-new.php?post_type=post" class="button-secondary">Crear nuevo post</a></td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<th scope="row"><label for="payment_url">Payment URL</label></th>';
+        $html .= '<td><input name="payment_url" type="url" id="payment_url" value="'.$post->payment_url.'" class="regular-text"></td>';
         $html .= '</tr>';
         $html .= '</tbody>';
         $html .= '</table>';

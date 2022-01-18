@@ -111,9 +111,5 @@ class shortcode_proceso_compra{
     function gateway_pago(){
         //generar pago de la factura
     }
-}
-    }
-
-    function gateway_pago(){}
 
 }
