@@ -258,6 +258,7 @@ class table_planes extends WP_List_Table {
         global $wpdb; 
 
         if(isset($_POST['submit'])){
+            print_r($_POST);
             $plan_name = $_POST['plan_name'];
             $plan_price = $_POST['plan_price'];
             $plan_subida = $_POST['plan_subida'];
@@ -280,7 +281,9 @@ class table_planes extends WP_List_Table {
             if(false === $update){
                 echo '<script>alert("Error al actualizar el plan'.$update.'");</script>';
             }else{
-                echo '<script>window.location.href = "?page=wisprointegration%2Fmodulos%2Fplanes%2Fplanes.php";</script>';
+                echo 'informacion guardada';
+                echo json_encode($update);
+                //echo '<script>window.location.href = "?page=wisprointegration%2Fmodulos%2Fplanes%2Fplanes.php";</script>';
             }
         }
             
@@ -346,7 +349,7 @@ class table_planes extends WP_List_Table {
         $html .= '</tr>';
         $html .= '<tr>';
         $html .= '<th scope="row"><label for="payment_url">Payment URL</label></th>';
-        $html .= '<td><input name="payment_url" type="url" id="payment_url" value="'.$post->payment_url.'" class="regular-text"></td>';
+        $html .= '<td><input name="payment_url" type="url" id="payment_url" value="'.$payment_url.'" class="regular-text"></td>';
         $html .= '</tr>';
         $html .= '</tbody>';
         $html .= '</table>';

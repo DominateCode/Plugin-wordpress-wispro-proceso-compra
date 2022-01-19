@@ -74,12 +74,14 @@ if ($_POST['name']) {
         </div>          
     </div>
 </form>
+<div class="error">
+    
+</div>
 
-<script> 
+<script  type="text/javascript" > 
 jQuery(document).ready(function($){ 
     $('#submit-registro').click(function(e){
-        e.preventDefault();
-        alert('hola');
+        e.preventDefault(); 
         $('#submit-registro').html('<div class="loading"><img src="<?php echo plugin_dir_url( dirname( __FILE__ ) ) .'/images/loader.gif';?>" alt="loading" /></div>');
 
         var name = $('#nombre').val();
@@ -105,10 +107,11 @@ jQuery(document).ready(function($){
             },
             success: function(data){
                 console.log(data);
-               // $('#submit-registro').html('Registrar');
-            }
+                $('#submit-registro').html('Registrar');
+            },
             error: function(data){
-               // $('#submit-registro').html('Registrar');
+                $('#submit-registro').html('Registrar');
+                $('.error').html('<div class="alert alert-danger" role="alert">'+data.responseText+'</div>');
                 console.log(data);
             }
         });
