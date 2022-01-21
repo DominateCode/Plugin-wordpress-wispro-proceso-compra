@@ -6,9 +6,16 @@ Requisitos.
 
 Instalacion: 
 
-- Descomprime el plugin en la carpeta de plugins de wordpress:
+- Descomprime el plugin en la carpeta de 
+
+plugins de wordpress:
     'path_to_instalacion_wordpress/wp-content/plugins/wisprointegration/'
 
-Shortcode para la vista del proceso de compra: 
+shortcode para registro de usuarios:
 
-[wispro_proceso_compra paso="1"]
+[wisprointegration_registro]
+
+shortcode bloque de planes 
+
+[wisprointegration_planes]
+
