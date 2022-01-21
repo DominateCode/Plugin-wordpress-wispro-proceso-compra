@@ -8,31 +8,6 @@ function console_log( $data ){
     echo 'console.log('. json_encode( $data ) .')';
     echo '</script>';
 } 
-console_log("hola");
-/*
-if ($_POST['name']) {
-    $data_client = array(
-        'name' => $_POST['name'],
-        'national_identification_number' => $_POST['national_identification_number'],
-        'email' => $_POST['email'],
-        'phone' => $_POST['phone'],
-        'phone_number' => $_POST['phone_number'],
-        'city' => $_POST['city'],
-        'address' => $_POST['address'],
-        'details' => 'Cliente registrado a traves de la pagina web',
-    ); 
-    console_log($data_client);
-    $respuesta = [];
-    $cliente = crear_cliente($data_client);
-    console_log($cliente);
-    if($cliente->status == '200'){
-        $respuesta = '<div class="alert alert-success" role="alert">Client added successfully </div>';
-    }
-    if ($cliente->status == '400') {
-        $respuesta = '<div class="alert alert-danger" role="alert">Error al crear cliente.</div>';
-    }
-    echo json_encode($respuesta);
-}else{*/
 ?> 
 <form action="" method="POST" id="frm-registro">  
     <div class="br-2 bg-light mt-5">
@@ -74,9 +49,7 @@ if ($_POST['name']) {
         </div>          
     </div>
 </form>
-<div class="error">
-    
-</div>
+<div class="error"> </div>
 
 <script  type="text/javascript" > 
 jQuery(document).ready(function($){ 

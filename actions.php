@@ -8,6 +8,7 @@ function wispro_api(){
 } 
 
 function crear_cliente(){
+    console_log($_POST);
     $data = [];
     $errors = [];
     if(empty($_POST['name'])){
