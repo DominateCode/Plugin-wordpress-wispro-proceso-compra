@@ -7,69 +7,113 @@ function wispro_api(){
     return new WisproIntegrationRestApi();
 } 
 
-function crear_cliente(){
-    console_log($_POST);
+function crear_cliente(){ 
     $data = [];
     $errors = [];
-    if(empty($_POST['name'])){
-        $errors['name'] = 'El nombre es requerido';
-    }
-    if(empty($_POST['national_identification_number'])){
-        $errors['national_identification_number'] = 'El numero de cedula es requerido';
-    }
-    if(empty($_POST['email'])){
-        $errors['email'] = 'El correo es requerido';
-    }
-    if(empty($_POST['phone_mobile'])){
-        $errors['phone_mobile'] = 'El celular es requerido';
-    }
-    if(empty($_POST['address'])){
-        $errors['address'] = 'La dirección es requerida';
-    }
-    if(empty($_POST['city'])){
-        $errors['city'] = 'La ciudad es requerida';
+    $empty = false;
+    
+    $phone = isset($_REQUEST['phone']) ? sanitize_text_field( $_REQUEST['phone']) : '';
+
+    if(isset($_REQUEST['name'])){
+        $name = sanitize_text_field( $_REQUEST['name']);
+        if(empty($name)){
+            $errors[] = 'El nombre es requerido';
+            $empty = true;
+        }
+    }else{
+        $errors[] = 'El nombre es requerido';
+        $empty = true;
     }
 
-    if (!empty($errors)) {
-        $data['status'] = 400;
-        $data['errors'] = $errors;
-    } else {
-        $data['status'] = 200;
-        $data['message'] = 'Success!';
+    if(isset($_REQUEST['national_identification_number'])){
+        $national_identification_number = sanitize_text_field( $_REQUEST['national_identification_number']);
+        if(empty($national_identification_number)){
+            $errors[] = 'El numero de cedula es requerido';
+            $empty = true;
+        }
+    }else{
+        $errors[] = 'El numero de cedula es requerido';
+        $empty = true;
     }
-    $data_client = [
-        'name' => $_POST['name'],
-        'national_identification_number' => $_POST['national_identification_number'],
-        'email' => $_POST['email'],
-        'phone' => $_POST['phone'],
-        'phone_number' => $_POST['phone_mobile'],
-        'city' => $_POST['city'],
-        'address' => $_POST['address'],
-        'details' => 'Cliente registrado a traves de la pagina web',
-    ];
-    $data['data'] = $data_client;
 
-    if (!empty($data_client)) {
-        //comprobar por cedula si existe el cliente
-        $client_exist = $this->wispro_api()->remote_GET('/clients',[
-                'national_identification_number_eq' => $data_client['national_identification_number']
+    if(isset($_REQUEST['email'])){
+        $email = sanitize_text_field( $_REQUEST['email']);
+        if(empty($email)){
+            $errors[] = 'El correo electronico es requerido';
+            $empty = true;
+        }
+    }else{
+        $errors[] = 'El correo electronico es requerido';
+        $empty = true;
+    }
+
+    if(isset($_REQUEST['phone_mobile'])){
+        $phone_mobile = sanitize_text_field( $_REQUEST['phone_mobile']);
+        if(empty($phone_mobile)){
+            $errors[] = 'El numero de celular es requerido';
+            $empty = true;
+        }
+    }else{
+        $errors[] = 'El numero de celular es requerido';
+        $empty = true;
+    }
+
+    if(isset($_REQUEST['address'])){
+        $address = sanitize_text_field( $_REQUEST['address']);
+        if(empty($address)){
+            $errors[] = 'La direccion es requerida';
+            $empty = true;
+        }
+    }else{
+        $errors[] = 'La direccion es requerida';
+        $empty = true;
+    }
+
+    if(isset($_REQUEST['city'])){
+        $city = sanitize_text_field( $_REQUEST['city']);
+        if(empty($city)){
+            $errors[] = 'La ciudad es requerida';
+            $empty = true;
+        }
+    }else{
+        $errors[] = 'La ciudad es requerida';
+        $empty = true;
+    }
+
+    if(!$empty){ 
+        $wispro_api = new WisproIntegrationRestApi();
+        $client_exist = $wispro_api->remote_GET('/clients',[
+            'national_identification_number_eq' => $national_identification_number
             ]);
 
-        if(!empty($client_exist) && $client_exist->meta->pagination->total_records != 0){
-            $this->respuesta['message'] = '<div class="alert alert-danger" role="alert">
-            El cliente con el numero de documento '.$data_client['national_identification_number'].' ya se encuentra registrado.<br>
-            Accede desde <a href="'.get_option('wisprointegration_url_portal_cliente').'">aqui</a> al portal de cliente.
-            </div>';
-            return false;
-        }else{
-            $data = $this->wispro_api()->remote_POST('/clients',$data_client);
-            if($data->status == '200'){
-                //crear cliente por rest api wispro 
-                $this->respuesta['message'] = '<div class="alert alert-success" role="alert">Client added successfully </div>';
-                return true;
+        $data['status'] = $client_exist->status;
+        if($client_exist->status == 200){
+            if ( $client_exist->meta->pagination->total_records != 0) {
+                $data['message'] = 'ya existe un cliente registrado con esta cedula.';
+            }else{
+                $create = $wispro_api->remote_POST('/clients', [
+                    'name' => $name,
+                    'national_identification_number' => $national_identification_number,
+                    'email' => $email,
+                    'phone' => $phone,
+                    'phone_mobile' => $phone_mobile,
+                    'city' => $city,
+                    'address' =>  $address,
+                    'details' => sanitize_text_field('Cliente registrado a traves de la pagina web'),
+                ]);
+                if($create->status == '200'){
+                    //crear cliente por rest api wispro 
+                    $data['data'] = $create->data;
+                    $data['message'] = 'Registrado con exito.';
+                }
+                $data['responseWispro'] = $create;
             }
         }
-        return true;
+    }else{
+        $data['status'] = 400;
+        $data['errors'] = $errors;
     }
-    echo json_encode($data);
+    
+    wp_send_json($data);
+    wp_die();
 }

@@ -17,7 +17,7 @@ function console_log( $data ){
         </div>
         <div class="form-group">
             <label for="national_identification_number">Numero de Cedula*</label>
-            <input class="form-control" type="number" name="national_identification_number" placeholder="Identificación" required>
+            <input class="form-control" type="number" id="national_identification_number" name="national_identification_number" placeholder="Identificación" required>
         </div>
         <div class="form-group">
             <label for="email">Correo Electrónico*</label>
