@@ -2,7 +2,29 @@
 
 add_action('wp_ajax_nopriv_wispro_integration_registrar_usuario', 'crear_cliente');
 add_action('wp_ajax_wispro_integration_registrar_usuario', 'crear_cliente');
+//action woocomerce get product attributes
+add_action('wp_ajax_nopriv_wispro_integration_get_product', 'get_product_data');
+add_action('wp_ajax_wispro_integration_get_product', 'get_product_data');
 
+function get_product_data(){
+    if(isset($_REQUEST['id'])){
+        $id = $_REQUEST['id'];
+        $product = wc_get_product($id);
+        $response = array(
+            'id' => $product->get_id(),
+            'name' => $product->get_name(),
+            'price' => $product->get_price(),
+            'image' => $product->get_image_id(),
+            'description_rendered' => $product->get_description(),
+            'attributes' => $product->get_attributes(),
+        );
+        wp_send_json($response);
+        wp_die();
+    }else{
+        wp_send_json(array('error' => 'property id not found'));
+        wp_die();
+    }
+}
 function wispro_api(){
     return new WisproIntegrationRestApi();
 } 

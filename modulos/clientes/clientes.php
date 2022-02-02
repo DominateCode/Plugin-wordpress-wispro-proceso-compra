@@ -23,6 +23,8 @@ $wispro_class = new wisprointegration();
 <?php
 
 function get_table(){
+    echo '<div class="updated"><p>'.__('La siguiente lista es una lista obtenida del erp wispro_cloud.').'</p></div>';
+
     $testListTable = new table_clientes();
     $testListTable->prepare_items();
     $testListTable->display();

@@ -19,6 +19,15 @@ $wispro_class = new wisprointegration();
 <?php
 
 function get_table(){
+
+    if (!isset($_GET['action'])) {
+        //buttom add new
+        $url = admin_url('admin.php?page=wisprointegration%2Fmodulos%2Fplanes%2Fplanes.php&action=add');
+        $buttom_add_new = '<a href="'.$url.'" class="page-title-action">'.__('Agregar nuevo','Wispro_integraton').'</a>';
+        echo $buttom_add_new;
+    }
+
+    //table
     $testListTable = new table_planes();
     $testListTable->prepare_items();
     $testListTable->display();

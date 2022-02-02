@@ -100,6 +100,18 @@ class table_planes extends WP_List_Table {
         );
     }
 
+    function column_precio($item){
+        $id_producto_wc = $item->woocomerce_product_id;
+        if ($id_producto_wc != 0) {
+            $product_wc = wc_get_product($id_producto_wc);
+            $precio = $product_wc->get_price();
+            return '$'.$precio;
+        }else{
+            return 'incompleto';
+        }
+    }
+
+
     function column_descarga_kb($item){
         if($item->descarga_kb >= 1000){
             return $item->descarga_kb/1000 . ' MB';
@@ -222,6 +234,10 @@ class table_planes extends WP_List_Table {
         if( 'edit' === $this->current_action() ) {
             $this->edit_plan();
         }
+        //add
+        if( 'add' === $this->current_action() ) {
+            $this->add_plan();
+        }
         
     }
 
@@ -260,30 +276,26 @@ class table_planes extends WP_List_Table {
         if(isset($_POST['submit'])){
             print_r($_POST);
             $plan_name = $_POST['plan_name'];
-            $plan_price = $_POST['plan_price'];
             $plan_subida = $_POST['plan_subida'];
             $plan_descarga = $_POST['plan_descarga'];
-            $post_id = $_POST['post_id'];
             $plan_id = $_POST['id'];
             $dispositivos = $_POST['num_dispositivos'];
             $estrato = $_POST['plan_estrato'];
-            $payment_url = $_POST['payment_url'];
+            $woocomerce_product_id = $_POST['woocomerce_product_id'];
             $update = $wpdb->update($wpdb->prefix . 'wispro_integration_planes', array(
                 'nombre' => $plan_name,
-                'precio' => $plan_price,
                 'subida_kb' => $plan_subida,
                 'descarga_kb' => $plan_descarga,
-                'post_id' => $post_id,
                 'num_dispositivos' => $dispositivos,
                 'estrato' => $estrato,
-                'payment_url' => $payment_url
+                'woocomerce_product_id' => $woocomerce_product_id
             ), array( 'id' => $plan_id ));
             if(false === $update){
                 echo '<script>alert("Error al actualizar el plan'.$update.'");</script>';
             }else{
                 echo 'informacion guardada';
-                echo json_encode($update);
-                //echo '<script>window.location.href = "?page=wisprointegration%2Fmodulos%2Fplanes%2Fplanes.php";</script>';
+                //echo json_encode($update);
+                echo '<script>window.location.href = "?page=wisprointegration%2Fmodulos%2Fplanes%2Fplanes.php";</script>';
             }
         }
             
@@ -291,14 +303,12 @@ class table_planes extends WP_List_Table {
         $id = $_GET['plan'];
         $plan = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpdb->prefix" . "wispro_integration_planes WHERE id = '%s'", $id));
         $plan_name = $plan->nombre;
-        $plan_price = $plan->precio;
         $plan_subida = $plan->subida_kb;
         $plan_descarga = $plan->descarga_kb;
-        $post_id = $plan->post_id;
         $plan_id = $plan->id;
         $estrato = $plan->estrato;
         $dispositivos = $plan->num_dispositivos;
-        $payment_url = $plan->payment_url;
+        $woocomerce_product_id = $plan->woocomerce_product_id;
         
 
         $html = '<div class="wrap">';
@@ -310,10 +320,6 @@ class table_planes extends WP_List_Table {
         $html .= '<tr>';
         $html .= '<th scope="row"><label for="plan_name">Nombre</label></th>';
         $html .= '<td><input name="plan_name" type="text" id="plan_name" value="'.$plan_name.'" class="regular-text"></td>';
-        $html .= '</tr>';
-        $html .= '<tr>';
-        $html .= '<th scope="row"><label for="plan_price">Precio</label></th>';
-        $html .= '<td><input name="plan_price" type="text" id="plan_price" value="'.$plan_price.'" class="regular-text"></td>';
         $html .= '</tr>';
         //input campo estrato
         $html .= '<tr>';
@@ -334,22 +340,18 @@ class table_planes extends WP_List_Table {
         $html .= '<td><input name="num_dispositivos" type="text" id="num_dispositivos" value="'.$dispositivos.'" class="regular-text"></td>';
         $html .= '</tr>';
         $html .= '<tr>';
-        $html .= '<th scope="row"><label for="post_id">Post</label></th>';
-        $html .= '<td><select name="post_id" id="post_id">';
-        $html .= '<option value="0">Seleccione un post</option>';
-        $posts = get_posts(array('post_type' => 'post', 'numberposts' => -1));
-        foreach($posts as $post){
-            $html .= '<option value="'.$post->ID.'" ';
-            if($post->ID == $post_id){
+        $html .= '<th scope="row"><label for="payment_url">product woocomerce</label></th>';
+        $html .= '<td><select name="woocomerce_product_id" id="woocomerce_product_id">';
+        $html .= '<option value="0">Seleccione un producto</option>';
+        $products = get_posts(array('post_type' => 'product', 'numberposts' => -1));
+        foreach($products as $product){
+            $html .= '<option value="'.$product->ID.'" ';
+            if($product->ID == $woocomerce_product_id){
                 $html .= 'selected';
             }
-            $html .= '>'.$post->post_title.'</option>';
+            $html .= '>'.$product->post_title.'</option>';
         }
-        $html .= '</select><a href="'.get_admin_url().'post-new.php?post_type=post" class="button-secondary">Crear nuevo post</a></td>';
-        $html .= '</tr>';
-        $html .= '<tr>';
-        $html .= '<th scope="row"><label for="payment_url">Payment URL</label></th>';
-        $html .= '<td><input name="payment_url" type="url" id="payment_url" value="'.$payment_url.'" class="regular-text"></td>';
+        $html .= '</select><a href="'.get_admin_url().'post-new.php?post_type=product" class="button-secondary">Crear nuevo producto</a></td>';
         $html .= '</tr>';
         $html .= '</tbody>';
         $html .= '</table>';
@@ -359,6 +361,101 @@ class table_planes extends WP_List_Table {
         $html .= '</div>';
         echo $html;
         wp_die();
+    }
+
+    function add_plan(){
+        global $wpdb; 
+        if(isset($_POST['submit'])){
+            print_r($_POST);
+            $plan_name = $_POST['plan_name'];
+            $plan_subida = $_POST['plan_subida'];
+            $plan_descarga = $_POST['plan_descarga'];
+            $dispositivos = $_POST['num_dispositivos'];
+            $estrato = $_POST['plan_estrato'];
+            $woocomerce_product_id = $_POST['woocomerce_product_id'];
+            $insert = $wpdb->insert(
+                $wpdb->prefix . 'wispro_integration_planes',
+                array(
+                    'nombre' => $plan_name,
+                    'subida_kb' => $plan_subida,
+                    'descarga_kb' => $plan_descarga,
+                    'num_dispositivos' => $dispositivos,
+                    'estrato' => $estrato,
+                    'woocomerce_product_id' => $woocomerce_product_id
+                ),
+                array(
+                    '%s',
+                    '%s',
+                    '%s',
+                    '%s',
+                    '%d',
+                    '%d',
+                    '%d',
+                    '%s',
+                    '%s',
+                    '%d'
+                )
+            );
+            if($insert){
+                $this->show_message('Plan creado correctamente');
+                //echo json_encode($insert);
+                echo '<script>window.location.href = "?page=wisprointegration%2Fmodulos%2Fplanes%2Fplanes.php";</script>';
+
+            }else{
+                $this->show_message('Error al crear el plan');
+            }
+        }
+
+        //form add plan
+        $html = '<div class="wrap">';
+        $html .= '<h3>Añadir plan</h3>';
+        $html .= '<form method="post" action="">';
+        $html .= '<table class="form-table">';
+        $html .= '<tbody>';
+        $html .= '<tr>';
+        $html .= '<th scope="row"><label for="plan_name">Nombre</label></th>';
+        $html .= '<td><input name="plan_name" type="text" id="plan_name" placeholder="Titulo del plan" class="regular-text"></td>';
+        $html .= '</tr>';
+        //input campo estrato
+        $html .= '<tr>';
+        $html .= '<th scope="row"><label for="plan_estrato">Estrato</label></th>';
+        $html .= '<td><input name="plan_estrato" type="text" id="plan_estrato" placeholder="liste los estratos para este plan" class="regular-text"></td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<th scope="row"><label for="plan_subida">Subida</label></th>';
+        $html .= '<td><input name="plan_subida" type="text" id="plan_subida" class="regular-text"><p>Digite la velocidad de subida ej: 25000 para un plan de 25Mb </p></td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<th scope="row"><label for="plan_descarga">Descarga</label></th>';
+        $html .= '<td><input name="plan_descarga" type="text" id="plan_descarga" class="regular-text"><p>Digite la velocidad de bajada ej: 25000 para un plan de 25Mb </p></td>';        
+        $html .= '</tr>';
+        // cantidad de dispositivos recomendados
+        $html .= '<tr>';
+        $html .= '<th scope="row"><label for="plan_descarga">Dispositivos recomendados</label></th>';
+        $html .= '<td><input name="num_dispositivos" type="text" id="num_dispositivos" placeholder="Digite la cantidad de dispositivos recomendados" class="regular-text"></td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<th scope="row"><label for="payment_url">product woocomerce</label></th>';
+        $html .= '<td><select name="woocomerce_product_id" id="woocomerce_product_id">';
+        $html .= '<option value="0">Seleccione un producto</option>';
+        $products = get_posts(array('post_type' => 'product', 'numberposts' => -1));
+        foreach($products as $product){
+            $html .= '<option value="'.$product->ID.'">'.$product->post_title.'</option>';
+        }
+        $html .= '</select><a href="'.get_admin_url().'post-new.php?post_type=product" class="button-secondary">Crear nuevo producto</a></td>';
+        $html .= '</tr>';
+        $html .= '</tbody>';
+        $html .= '</table>';
+        $html .= '<p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Guardar">';
+        $html .= '<a href="?page=wisprointegration%2Fadmin%2Fplanes.php" class="button button-secondary">Cancelar</a></p>';
+        $html .= '</form>';
+        $html .= '</div>';
+        echo $html;
+        wp_die();
+    }
+
+    function show_message($message){
+        echo '<script>alert("'.$message.'");</script>';
     }
 
 

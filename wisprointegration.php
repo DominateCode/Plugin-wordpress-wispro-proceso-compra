@@ -52,12 +52,10 @@ function wispro_integration_activar(){
          id varchar(38) NOT NULL,
          nombre VARCHAR(255) NOT NULL,
          estrato varchar(16),
-         post_id bigint(20),
-         precio VARCHAR(255) NOT NULL,
          subida_kb int(3) NOT NULL,
          descarga_kb int(3) NOT NULL,
          num_dispositivos int(2),
-         payment_url varchar(255) NOT NULL,
+         woocomerce_product_id bigint(20),
          PRIMARY KEY (id)
       ) $charset_collate;";
       require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
